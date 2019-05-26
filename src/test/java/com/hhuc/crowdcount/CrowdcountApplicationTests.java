@@ -1,7 +1,11 @@
 package com.hhuc.crowdcount;
 
+import com.hhuc.crowdcount.dao.CameraPeopleDao;
 import com.hhuc.crowdcount.dao.UserDao;
+import com.hhuc.crowdcount.model.Camera;
+import com.hhuc.crowdcount.model.Camera_people_num;
 import com.hhuc.crowdcount.model.User;
+import com.hhuc.crowdcount.service.CameraService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,12 @@ public class CrowdcountApplicationTests {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    CameraPeopleDao cameraPeopleDao;
+
+    @Autowired
+    CameraService cameraService;
 
     @Test
     public void contextLoads() {
@@ -41,5 +51,30 @@ public class CrowdcountApplicationTests {
             System.out.println("插入失败");
 
     }
+
+    @Test
+    public void testCameraPeopleDao() {
+        List<Camera_people_num> camera_people_nums = cameraPeopleDao.getAllcamera_people_nums();
+        for (Camera_people_num camera_people_num : camera_people_nums) {
+            System.out.println(camera_people_num);
+        }
+        System.out.println("***************************************************");
+        camera_people_nums = cameraPeopleDao.getTopCamera_people_numById(1, 3);
+        for (Camera_people_num camera_people_num : camera_people_nums) {
+            System.out.println(camera_people_num);
+        }
+    }
+
+
+    @Test
+    public void testCameraByIDDao() {
+        List<Camera> cameras=cameraService.getAllCameraInfo();
+        for (Camera camera : cameras) {
+            System.out.println(camera);
+        }
+
+    }
+
+
 
 }
