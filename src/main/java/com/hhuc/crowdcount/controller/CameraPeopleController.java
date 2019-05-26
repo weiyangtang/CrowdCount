@@ -19,14 +19,25 @@ public class CameraPeopleController {
     @Autowired
     CameraPeopleService cameraPeopleService;
 
-    @RequestMapping(value = "CameraPeople/allList", method = RequestMethod.GET)
+    @RequestMapping(value = "/CameraPeople/allList", method = RequestMethod.GET)
     public String CameraPeopleAllListPage() {
         return "/camera/CameraPeopleAllListPage";
     }
 
-    @RequestMapping(value = "CameraPeople/allList", method = RequestMethod.POST)
+    @RequestMapping(value = "/CameraPeople/allList", method = RequestMethod.POST)
     @ResponseBody
     public List<Camera_people_num> CameraPeopleAllListPost(@RequestParam("camera_id") int camera_id, @RequestParam("top_num") int top_num) {
+        return cameraPeopleService.getTopCamera_people_numById(camera_id, top_num);
+    }
+
+    @RequestMapping(value = "/CameraPeople/CameraPhoto", method = RequestMethod.GET)
+    public String CameraPhotoPage() {
+        return "/camera/CameraPhoto";
+    }
+
+    @RequestMapping(value = "/CameraPeople/CameraPhoto", method = RequestMethod.POST)
+    @ResponseBody
+    public List<Camera_people_num> CameraPhotoPost(@RequestParam("camera_id") int camera_id, @RequestParam("top_num") int top_num) {
         return cameraPeopleService.getTopCamera_people_numById(camera_id, top_num);
     }
 

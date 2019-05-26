@@ -17,4 +17,5 @@ public class Camera_people_num {
     )
     private Date time;
     private int num;
+    private String image;
 }
