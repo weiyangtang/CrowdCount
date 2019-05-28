@@ -1,0 +1,157 @@
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <!--include ECharts document-->
+    <title>
+        ECharts
+    </title>
+    <script th:src="@{~/static/bootstrap/js/jquery-3.4.1.min.js}"></script>
+    <link th:href="@{~/static/bootstrap/css/bootstrap.css}" rel="stylesheet"/>
+    <script th:src="@{~/static/bootstrap/js/bootstrap.js}"></script>
+    <link th:href="@{~/static/bootstrap/css/bootstrap.css}" rel="stylesheet"/>
+    <link th:href="@{~/static/layui/css/layui.css}" rel="stylesheet"/>
+    <!--<script th:src="@{~/static/layui/layui.all.js}"></script>-->
+    <script th:src="@{~/static/layer/layer.js}"></script>
+</head>
+<body>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">实时监控</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li><a href="cam_location.html">监控地图分布</a></li>
+                <li class="active"><a href="mypic.html">监控现场</a></li>
+                <li><a href="my_cam_data.html">人流数据</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        选择监控摄像机
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">一号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">二号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">三号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">四号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">无号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">六号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">七号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">八号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">九号摄像机</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="row">
+    <div class="row col-sm-1 col-md-1 col-lg-1"></div>
+    <div class="row col-sm-10 col-md-10 col-lg-10" id="demo">
+        <div class="col-sm-6 col-md-3 col-lg-4">
+            <div class="thumbnail">
+                <img id="camera1" src="static/images/tempPic.jpg" alt="通用的占位符缩略图">
+                <div class="caption">
+                    <h3 id="location_1"></h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-4">
+            <div class="thumbnail">
+                <img id="camera2" src="static/images/tempPic.jpg" alt="通用的占位符缩略图">
+                <div class="caption">
+                    <h3 id="location_2"></h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3 col-lg-4">
+            <div class="thumbnail">
+                <img id="camera3" src="static/images/tempPic.jpg" alt="通用的占位符缩略图">
+                <div class="caption">
+                    <h3 id="location_3"></h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row col-sm-1 col-md-1 col-lg-1"></div>
+    <div class="row col-sm-1 col-md-1 col-lg-1"></div>
+</div>
+
+<script>
+    allPhoto();
+
+    function createNewDiv(url, cam_num, cam_location) {
+        $("#demo").append(
+            '<div class="col-sm-6 col-md-3">' +
+            '<div class="thumbnail">' +
+            '<img src="' + url + '" alt="通用的占位符缩略图">' +
+            '<div class="caption">' +
+            '<h3>' + cam_num + '</h3>' +
+            '<p>' + cam_location + '</p>' +
+            '<p>' +
+            '<a href="#" class="btn btn-primary" role="button">' +
+            '按钮' +
+            '</a>' +
+            '<a href="#" class="btn btn-default" role="button">' +
+            '按钮' +
+            '</a>' +
+            '</p>' +
+            '</div>' +
+            '</div>' +
+            '</div>'
+        );
+    }
+
+    //
+    // $(function () {
+    //     $('#demo').click(function () {
+    //
+    //         //var newdiv = $('<div></div>')
+    //         //var parentDom=$('#demo');
+    //         //$("#demo").append('<b>Hello world!</b>'+'<b>Hello world!"sd"</b>');
+    //         createNewDiv('../img/pic.jpg', '二号摄像机', '图书馆');
+    //     })
+    // })
+
+    function getCameraPhoto(camera_id) {
+        $.ajax({
+            type: 'post',
+            url: '/CameraPeople/CameraPhoto',
+            async: false,
+            data: {
+                'camera_id': camera_id,
+                'top_num': 1
+            },
+            success: function (data) {
+
+                src = 'data:image/png;base64,' + data[0].image
+                $('#camera' + camera_id).attr('src', src)
+                $('#location_' + camera_id).html(data[0].camera_place)
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+
+    function allPhoto() {
+        getCameraPhoto(1);
+        getCameraPhoto(2);
+        getCameraPhoto(3);
+    }
+
+    setInterval("allPhoto()", 100)
+
+</script>
+
+</body>
+</html>

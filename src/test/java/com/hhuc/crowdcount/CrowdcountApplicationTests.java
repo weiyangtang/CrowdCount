@@ -6,6 +6,8 @@ import com.hhuc.crowdcount.model.Camera;
 import com.hhuc.crowdcount.model.Camera_people_num;
 import com.hhuc.crowdcount.model.User;
 import com.hhuc.crowdcount.service.CameraService;
+import com.hhuc.crowdcount.service.MailService;
+import com.hhuc.crowdcount.service.WarningService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,14 @@ public class CrowdcountApplicationTests {
 
     @Autowired
     CameraService cameraService;
+
+    //    @Autowired
+//    private JavaMailSender mailSender;
+    @Autowired
+    MailService mailService;
+
+    @Autowired
+    WarningService warningService;
 
     @Test
     public void contextLoads() {
@@ -68,13 +78,27 @@ public class CrowdcountApplicationTests {
 
     @Test
     public void testCameraByIDDao() {
-        List<Camera> cameras=cameraService.getAllCameraInfo();
+        List<Camera> cameras = cameraService.getAllCameraInfo();
         for (Camera camera : cameras) {
             System.out.println(camera);
         }
 
     }
 
+    @Test
+    public void testMail() {
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setFrom("dyc87112@qq.com");
+//        message.setTo("dyc87112@qq.com");
+//        message.setSubject("主题：简单邮件");
+//        message.setText("测试邮件内容");
+//
+//        mailSender.send(message);
+        mailService.sendMail("测试email", "email发送成功", "1103034830@qq.com");
+    }
 
+    @Test
+    public void testWaring(){
 
+    }
 }

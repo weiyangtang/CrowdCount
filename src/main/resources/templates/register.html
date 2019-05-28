@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title>人流量监管云平台</title>
+<link rel="stylesheet" type="text/css" th:href="@{/static/register/base.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/static/register/common.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/static/register/front.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{/static/register/newLogin.css}"/>
+<script type="text/javascript" th:src="@{/static/jquery-easyui-1.7.0/jquery.min.js}"></script>
+<script th:src="@{~/static/layer/layer.js}"></script>
+
+<style type="text/css">
+
+    body {
+        background: url("static/images/bg.png");
+    }
+
+    #register .toBeUsable .correct-ico {
+        display: inline-block;
+    }
+
+    input::-webkit-input-placeholder {
+        color: #999999;
+    }
+
+    input:-moz-placeholder {
+        color: #999999;
+    }
+
+    input:-ms-input-placeholder {
+        color: #999999;
+    }
+</style>
+
+</head>
+<body>
+<div class="newIndex-nav" id="J_searchFloatbox">
+    <div class="newIndex-layout newIndex-nav-bar clearfix font16">
+        <div class="newIndex-nav-condition fl">
+            <a class="newIndex-nav-item" style="font-family: 华文楷体;font-size: 30px;font-weight: bolder">人流量监管云平台</a>
+        </div>
+        <div class="newIndex-login fr"><a href="/login" class="J-btn on mr10 " hidefocus="true" target="_self">登录</a><a
+                href="" class="J-btn" hidefocus="true" target="_self">注册</a></div>
+    </div>
+</div>
+
+<div class="mainBag">
+    <div class="newIndex-layout">
+        <form>
+            <div class="new-login-box fr relative">
+                <div class="mt27 ml50"><span class="font-bold font20 blue6">注册账户</span> <span class="font16">已有账户？去<a
+                        href="登录" target="_self" class="regHref">登录</a></span></div>
+                <ul id="register" class="bag-aside-box mt18 relative">
+                    <li class=" clearfix bag-aside-item">
+                        <label class="bag-label mt10 fl">账号：</label>
+                        <input class="fl new-bag-item-input password mr5" data-val="true" id="userId"
+                               maxlength="25" name="userId" placeholder="数字/字母和_的组合" type="text" value="">
+                        <!-- <span class="fl red3" style="height:31px;line-height:31px;margin-right:5px;">*注册后不可修改</span>-->
+                    </li>
+                    <li class=" clearfix bag-aside-item">
+                        <label class="bag-label mt10 fl">用户名：</label>
+                        <input class="fl new-bag-item-input password mr5" data-val="true" id="UserName"
+                               maxlength="25" name="UserName" placeholder="数字/字母和_的组合" type="text" value="">
+                        <!-- <span class="fl red3" style="height:31px;line-height:31px;margin-right:5px;">*注册后不可修改</span>-->
+                    </li>
+                    <li class="relative clearfix bag-aside-item">
+                        <label class="bag-label mt10 fl">密 码：</label>
+                        <input class="fl new-bag-item-input mr5" data-val="true" data-val-length="密码长度最少为6个字符。"
+                               id="Password" maxlength="20" name="Password" onpaste="return false;" type="password">
+                    </li>
+                    <li class="relative clearfix bag-aside-item">
+                        <label class="bag-label mt10 fl">确认密码：</label>
+                        <input class="fl new-bag-item-input mr5" id="ConfirmPassword" maxlength="20"
+                               name="ConfirmPassword" onpaste="return false;" type="password">
+                    </li>
+
+                    <li class="relative clearfix bag-aside-item">
+                        <label class="bag-label mt10 fl">邮 箱：</label>
+                        <input class="fl new-bag-item-input mr5"
+                               id="Email" maxlength="50" name="Email" placeholder="注册后不可修改"
+                               type="text" value="">
+                        <!-- <span class="fl red3" style="height:31px;line-height:31px;margin-right:5px;">*注册后不可修改</span>-->
+                        <span class="field-validation-valid" data-valmsg-for="Email" data-valmsg-replace="true"></span>
+                    </li>
+                    <li class="relative clearfix bag-aside-item">
+                        <label class="bag-label mt10 fl">验证码：</label>
+                        <input class="fl new-bag-item-input mr5" id="VerifyCode" maxlength="4" name="VerifyCode"
+                               style="width:222px;" type="text"
+                               value="">
+                        <img title="点击切换验证码" alt="验证码" th:src="@{/code/getCaptchaCode}" class="fl J-verifycode mr5"
+                             style="width:96px;height:38px;cursor:pointer;" id="verifycodeImg"
+                             onclick="this.src='/code/getCaptchaCode?d='+new Date()*1">
+                    </li>
+                    <li class="clearfix ">
+                        <label class="bag-label fl"></label>
+                        <input type="button" value="注册" class="fl new-register-btn" onclick="check()">
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+
+<script>
+    function check() {
+        var username = $("#UserName").val();
+        var userId = $("#userId").val();
+        var password = $("#Password").val();
+        var password_2 = $("#ConfirmPassword").val();
+        var VerifyCode = $("#VerifyCode").val();
+        var email = $("#Email").val();
+        if (username == null || username.length < 2 || username.length > 5) {
+            layer.msg("姓名为2-5位字符或数字");
+            return false;
+        } else if (userId == null || userId.length < 6 || userId.length > 15) {
+            layer.msg("账号为6-15位数字或字母");
+            return false;
+        } else if (password == null || password.length < 6 || password.length > 15) {
+            layer.msg("密码为6-15位数字或字符");
+            return false;
+        } else if (password != password_2) {
+            layer.msg("两次输入的密码不同");
+            return false;
+        } else if (VerifyCode == null || VerifyCode.length != 4) {
+            layer.msg("验证码为4位数字或字母");
+            return false;
+        } else {
+
+            $.ajax({
+                type: 'post',
+                url: '/register',
+                async: false,
+                data: {
+                    'user_name': username,
+                    'user_password': password,
+                    'user_id': userId,
+                    'user_email': email,
+                    'VerifyCode': VerifyCode
+                },
+                success: function (result) {
+
+                    var option = parseInt(result);
+                    if (option == 0) alert("验证码错误");
+                    else if (option == -1) alert("账号已存在");
+                    else if (option == 1) {
+                        layer.msg(username + " 注册成功");
+                        window.location.href = "/login";
+                    }
+                },
+                error: function () {
+                    layer.msg("网络故障");
+                }
+            });
+
+        }
+
+        return true;
+    }
+</script>
+
+</html>

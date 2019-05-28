@@ -1,0 +1,263 @@
+﻿function sosoGuide(obj) {
+    return new sosoGuide.prototype.init(obj)
+}
+
+sosoGuide.prototype = {
+    init: function (obj) {
+        var defaultO = {
+            fixWidth: 0,
+            fixTop: 0,
+            fixLeft: 0,
+            container: $("#sosoGuide"),
+            url: 'http://soso.nipic.com/Home/GetOther'
+        };
+        var opt = $.extend(defaultO, obj);
+        this.opts = opt;
+        var _t = this;
+        this.id = ("ht" + Math.random()).replace(".", "");
+        this.requestedKey = [];
+        this.submit = function () {
+            $(".J_searchSubmit").click();
+        }
+        this.opts.container.on({
+            focus: function () {
+                var isReq = _t.isReqested.call(_t);
+                if (!_t.isOrigNull(_t.getInputVal())) {
+                    if (isReq) {//前端请求成功过过
+                        _t.show(isReq);
+                    } else {
+                        setTimeout(function () { _t.reqData.call(_t, _t.show) }, 100);
+                    }
+                }
+            },
+            keydown: function () {
+                _t.beforeKeyDownVal = _t.getInputVal();
+            },
+            keyup: function (e) {
+                var keycode = e.which;
+                if (keycode == 38) {//up
+                    if (_t.isDataNull.call(_t)) {//有没有数据，sug框是否存在
+                        _t.updownSelect.call(_t, true)
+                    }
+                    return;
+                } else if (keycode == 40) {//down
+                    if (_t.isDataNull.call(_t)) {//有没有数据，sug框是否存在
+                        _t.updownSelect.call(_t, false)
+                    }
+                    return;
+                } else {
+                    //按下键盘前和按下键盘后值不相等，请求
+                    var afterKeyDownVal = _t.getInputVal();
+                    var isReq = _t.isReqested.call(_t);
+                    if (isReq) {//前端请求成功过过
+                        _t.show(isReq);
+                    } else {
+                        _t.reqData.call(_t, _t.show);
+                    }
+                }
+            }
+        })
+
+        $(document).on({
+            "click.htsug": function (e) {
+                var target = $(e.target);
+                if (target.closest(_t.opts.container).length > 0) {//点击的是输入框区域
+                } else {//其它区域
+                    _t.hide();
+                }
+                if (target.closest($("#btsch")).length > 0) {
+                    _t.hide();
+                }
+            }
+        })
+
+    },
+    constructor: sosoGuide,
+    getPara: function () {
+        var obj = {
+            q: $(this.opts.container).val() || "",
+            page: 1
+        }
+        return obj;
+    },
+    isReqested: function () {
+        var _t = this
+        var inputKey = _t.getInputVal();
+        var result = false;
+        $.each(_t.requestedKey, function (i, n) {
+            if (n.key == inputKey) {
+                result = n.result;
+                return;
+            }
+        })
+        return result;
+    },
+    getInputVal: function () {
+        return $.trim(this.opts.container.val());
+    },
+    isOrigNull: function () {
+        return $.trim(this.getInputVal()) == "";
+    },
+    /*
+		请求的最新数据是否存在
+		true: 存在，
+		false: 不存在
+	*/
+    isDataNull: function () {
+        if (this.reqLatestData && this.reqLatestData.words && this.reqLatestData.words.length) return true;
+        return false
+    },
+    reqData: function (callback) {
+        var _t = this;
+        var key = _t.getPara().q;
+        $.ajax({
+            url: _t.opts.url,
+            dataType: "jsonp",
+            cache: true,
+            data: _t.getPara()
+        }).done(function (r) {
+            _t.requestedKey.push({ key: key, result: r })
+            _t.reqLatestData = r;
+            callback.call(_t, r);
+        })
+    },
+    updownSelect: function (upDown) {
+        if (this.box && this.box.find("li")) {
+            var $li = this.box.find("li")
+            var $liOn = this.box.find(".item-hover");
+            var length = $li.length;
+            if ($liOn) {
+                index = $liOn.index();
+            }
+            if (index == -1) {//无选中
+                this.origKey = this.opts.container.val();
+                if (upDown) {//up
+                    index = length - 1;
+                } else {//down
+                    index = 0;
+                }
+            } else {//有选中
+                if (upDown) {//up
+                    if (index == 0) {//第一个
+                        if (this.origKey) {
+                            $li.removeClass("item-hover");
+                            this.opts.container.val(this.origKey);
+                            return;
+                        }
+                    } else {
+                        index = index - 1;
+                    }
+                } else {//down
+                    if (index == length - 1) {//最后一个
+                        if (this.origKey) {
+                            $li.removeClass("item-hover");
+                            this.opts.container.val(this.origKey);
+                            return;
+                        }
+                    } else {
+                        index = index + 1;
+                    }
+                }
+            }
+            if (index != -1) {
+                var hoverDom = $li.eq(index);
+                this.liHoverFunc(hoverDom);
+                this.setInputVal(hoverDom.attr("key"))
+            }
+
+
+        }
+    },
+    isFirstInit: function () {
+        return $("#" + this.id).length > 0 ? false : true;
+    },
+    show: function (r) {
+        var _t = this;
+        if (_t.isFirstInit()) {
+            _t.firstInitHtml(r)
+        } else {
+            _t.showHtml(r);
+            var pos = this.getPos();
+            this.$box.css({ width: pos.width + 'px', top: pos.top + 'px', left: pos.left + 'px' })
+        }
+    },
+    firstInitHtml: function (r) {
+        var pos = this.getPos();
+        var $str = this.$box = $('<div class="htsug" id=' + this.id + ' style="display:none;z-index:15;height:auto;position:absolute;width:' + pos.width + 'px;top:' + pos.top + 'px;left:' + pos.left + 'px;"><ul></ul></div>');
+        this.box = $str.find("ul");
+        this.boxW = $str;
+        $str.appendTo($("body"));
+        var _t = this;
+        var liStr = "#" + _t.id + " li";
+        _t.showHtml(r);
+        $(document).on("mouseover.htsughover", liStr, function () {
+            _t.liHoverFunc($(this));
+        }).on("mouseout.htsugout", liStr, function () {
+            _t.liHoverFunc($(this), 1);
+        }).on("click.htsugclick", liStr, function () {
+            _t.setInputVal($(this).attr("key"));
+            _t.submit();
+            _t.hide()
+        })
+    },
+    setInputVal: function (val) {
+        this.opts.container.val(val);
+    },
+    /*
+		out: true, mouseover; out:false, mouseout
+		set: true, input框加上设置值, set: false, 不加设置值
+	*/
+    liHoverFunc: function ($dom, out) {
+        if ($dom) {
+            if (out) {//mouseover
+                $dom.removeClass("item-hover").siblings().removeClass("item-hover");
+            } else {//mouseout
+                $dom.addClass("item-hover").siblings().removeClass("item-hover");
+            }
+        }
+    },
+    getLiHtml: function (r) {
+        var str = "";
+        if (r && r.words.length) {
+            $.each(r.words, function (i, n) {
+                var obj = n;
+                str += '<li key="' + obj.Kw + '">' + obj.Kw + '</li>';
+            })
+        }
+        return str;
+    },
+    showHtml: function (r) {
+        if (this.box) {
+            if (r && r.words) {
+                if (r.words.length) {
+                    this.boxW.show();
+                } else {
+                    this.boxW.hide();
+                }
+                this.box.html(this.getLiHtml(r))
+            }
+        } else {
+            this.firstInitHtml()
+        }
+    },
+    hide: function () {
+        if (this.boxW) {
+            this.boxW.hide();
+        }
+    },
+    setBoxCss: function (cssObj) {
+        if (this.boxW) {
+            this.boxW.css(cssObj)
+        }
+    },
+    getPos: function () {
+        var $input = this.opts.container.offset();
+        return {
+            width: this.opts.container.width()+ 15 + this.opts.fixWidth,
+            top: $input.top + this.opts.container.height() + 1 + this.opts.fixTop,
+            left: $input.left + this.opts.fixLeft
+        }
+    }
+}
+
+sosoGuide.prototype.init.prototype = sosoGuide.prototype;

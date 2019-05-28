@@ -1,0 +1,504 @@
+(function(window){
+	/**
+	 *操作成功提示框
+	 *@param {originalObj} 页面上的弹出框,jquery对象;如果无,则应传值null
+	 *@param {blockUI} 页面上的弹出框遮罩层,jquery对象;如果无，则应传值null
+	 *@param {msg} 提示消息字符串
+	 *@param {config}
+	 *  @porperty {width} 提示框的宽度
+	 *  @porperty {isRefresh} 是否刷新或调整
+	 *  @porperty {refreshUrl} url
+	 */
+	function showSuccessTip(originalObj , blockUI, msg , config) {
+		if($.successTip){clearTimeout($.successTip);}
+		if (originalObj != null) $(originalObj).hide();
+		var b = $("body");
+		if(blockUI == null){
+			blockUI = $("<div style='position:fixed;_position:absolute;z-index:10000;width:100%;height:100%;top:0px;left:0px;background-color:#000;filter:alpha(opacity=30);opacity:0.3;'></div>");
+			b.append(blockUI);
+		}
+		if ($(".successMsgTip").length == 0) {
+			b.append("<div class='successMsgTip'><span class='fl ico successTip-ico'></span><p class='fl'>" + msg + "</p></div>");
+		}
+		var successObj = $(".successMsgTip"),
+			settings = { "width" : "" , "isRefresh" : false , "refreshUrl" : "" },
+			conf = $.extend(settings,config),
+			width = successObj.width()
+			marginLeft = -(parseInt(width)/2);
+		successObj.css({ "opacity": 0, "margin-top": "0px", "margin-left": marginLeft + "px" }).show().find("p").html(msg).end().animate({
+			"opacity": 1,
+			"margin-top": "-25px"
+		}, 200);
+		$.successTip = setTimeout(function () {
+			successObj.animate({
+				"opacity": 0,
+				"margin-top": "-50px"
+			}, 200, function () {
+				successObj.hide().find("p").html("");
+				if (originalObj != null) $(originalObj).remove();
+				if (blockUI != null) $(blockUI).remove();
+				if(conf.isRefresh){
+					var refreshUrl = conf.refreshUrl;
+					refreshUrl == "" ? location.reload() : location.href = refreshUrl;	
+				}
+			});
+		}, 1300);
+	}
+	
+	/**
+	 *操作失败提示框
+	 *@param {msg} 提示消息字符串
+	 *@param {config}
+	 *  @porperty {width} 提示框的宽度
+	 *  @porperty {height} 提示框的高度
+	 *  @porperty {isRefresh} 是否刷新或调整
+	 *  @porperty {refreshUrl} url
+	 */
+	function showErrorTip(msg , config) {
+		var settings = $.extend({ "width" : 350 , "height" : 140 , "isRefresh" : false , "refreshUrl" : ""} , config),
+			topDoc = $(top.document),
+			tip = topDoc.find("#J_showErrorTip"),
+			blockUI,
+			showErrorTipBox,
+			showErrorTipBg,
+			showErrorTipInner;
+		if (tip.length == 0) {
+			var settingsWidth = settings.width,
+				settingsHeight = settings.height,
+				expr = /^\d+$/g;
+			var width = isNaN(parseInt(settingsWidth)) ? "auto" : parseInt(settingsWidth);
+			var height = isNaN(parseInt(settingsHeight)) ? "auto" : parseInt(settingsHeight);
+			blockUI = $("<div class='showErrorTip-blockUI' id='J_blockUI'></div>");
+			showErrorTipBox = $("<div class='showErrorTip-box' id='J_showErrorTip'></div>").css({"width" : width , "height" : height});
+			showErrorTipBg = $("<div class='showErrorTip-boxBg'></div>").css({"width" : width , "height" : height});
+			showErrorTipInner = $("<div class='showErrorTip-inner' id='J_showErrorTipInner'><div class='showErrorTip-hd'>昵图网提示：</div><p><span class='ico error-ico2 mr5'></span>"+ msg +"</p><div class='showErrorTip-bottom'><input type='button' value='确定' class='showErrorTip-btn' id='J_showErrorTipBtn' /></div></div>");
+			showErrorTipBox.append(showErrorTipBg).append(showErrorTipInner);
+			topDoc.find("body").append(blockUI,showErrorTipBox);
+
+			/*var width = settings.width == "auto" ? "auto" : parseInt(settings.width) + "px",
+				height = settings.height == "auto" ? "auto" : parseInt(settings.height) + "px";
+			topDoc.find("body").append("<div class='showErrorTip-box' id='J_showErrorTip' style='width:"+ width +"px;height:"+ height +";margin-left:-"+ width/2 +"px;margin-top:-"+ height/2 +";'><div class='showErrorTip-boxBg' style='width:"+ width +";height:"+ height +";' id='J_showErrorTipBg'></div><div class='showErrorTip-inner' style='width:"+ (width-2) +";height:"+ (height-2) +";'><div class='showErrorTip-hd'>昵图网提示：</div><p><span class='ico error-ico2 mr5'></span>"+ msg +"</p><div class='showErrorTip-bottom'><input type='button' value='确定' class='showErrorTip-btn' id='J_showErrorTipBtn' /></div></div></div>");*/
+		}else{
+			blockUI = topDoc.find("#J_blockUI"),
+			showErrorTipBox = topDoc.find("#J_showErrorTip");
+			showErrorTipBg = topDoc.find("#J_showErrorTipBg");
+			showErrorTipInner = topDoc.find("#J_showErrorTipInner");
+		}
+		var w = showErrorTipBox.outerWidth(),
+			h = showErrorTipBox.outerHeight();
+		showErrorTipBox.css({ "margin-left" : "-" + (w /2) + "px" , "margin-top" : "-" + (h /2) + "px"});
+		showErrorTipBg.css({"width" : w , "height" : h});
+		var pb = parseInt(showErrorTipInner.css("padding-bottom")),
+			pt = parseInt(showErrorTipInner.css("padding-top"));
+		showErrorTipInner.height(h - 2 - pb -pt);
+		var btn = topDoc.find("#J_showErrorTipBtn"),
+			i = 5;
+		if($.browser.msie && $.browser.version == "6.0"){
+			blockUI.css({"width":topDoc.width(),"height":topDoc.height()});
+		}
+		blockUI.show();
+		showErrorTipBox.fadeIn(100);
+		$.showErrorTipTimer = setTimeout(function(){
+			if(i == 0){
+				clearShowError();
+				return;
+			}
+			i--;
+			btn.val("确定("+ i +")");
+			$.showErrorTipTimer = setTimeout(arguments.callee,1000);
+		},1000);
+		btn.on("click",clearShowError);
+		
+		function clearShowError(){
+			if($.showErrorTipTimer) {clearTimeout($.showErrorTipTimer);}	
+			if(settings.isRefresh){
+				var refreshUrl = settings.refreshUrl;
+				if(typeof refreshUrl != "string" || refreshUrl == "") {
+					refreshUrl = location.href;	
+				}
+				location.href = refreshUrl;
+			}
+			blockUI.remove();
+			showErrorTipBox.remove();
+		}
+	}
+	
+	/**
+	 *操作确定框
+	 *@param {config}
+	 *  @porperty {titleMsg} title字符串
+	 *  @porperty {tipMsg} 提示消息字符串
+	 *  @porperty {width} 宽度
+	 *  @porperty {height} 高度
+	 *  @porperty {btn} 操作按钮
+	 *  @porperty {closeBtnVisible} 右上角是否有关闭 X
+	 *@param {callback} 回调函数
+	 */
+	function falseConfirm(config , callback){
+	    var cfg = $.extend({
+	        "type":0,
+	        "titleMsg" : "",
+	        "tipMsg" : "",
+	        "width": 540,
+	        "height": 275,
+	        "btn": "<span class='inline-block bg-png24 search-sort-btn member-common-on " + ((typeof config != 'undefined' && config.okClose) ? "" : "close-floatbox") + " J-confirm-yes'>确定</span><span class='inline-block bg-png24 close-floatbox search-sort-btn'>取消</span>",
+	        "closeBtnVisible" : true
+	    }, config);
+        if(cfg.type==1){
+            var str = "<div class='false-confirm-box'><div>" + cfg.tipMsg + "</div><div class='confirm-box'>" + cfg.btn + "</div></div>";
+        } else {
+            var str = "<div class='false-confirm-box'><p>" + cfg.tipMsg + "</p><div class='confirm-box'>" + cfg.btn + "</div></div>";
+	      }
+			var config = {box : "falseConfirm" , bg : "falseConfirmBg" , title : cfg.titleMsg , content : str , boxConfig : {width : parseInt(cfg.width) + "px" , height : parseInt(cfg.height) + "px" , "closeBtnVisible" : cfg.closeBtnVisible}};
+		loadFloatboxScript(config, function () {
+		    if ($(".J-confirm-yes").length > 0) {
+			    $(".J-confirm-yes").on("click", function () {
+					var self = $(this);
+					if(self.is(":disabled")){
+						return;
+					}
+					self.attr("disabled","disabled");
+					typeof callback == "function" && callback(true);
+				});
+			} else {
+				typeof callback == "function" && callback(true);
+			}	
+		});
+	}
+  
+	
+	/**
+	 *下拉选择框
+	 *@param {e} window event 对象
+	 *@param {callback} 回调函数
+	 */
+	function showFalseDroplist(e , callback){
+		var target = $(e.target),
+			isSelfBool = target.hasClass('J-false-select'),
+			targetParent = target.closest(".J-false-select"),
+			isParentBool = targetParent.length > 0,
+			obj;
+		$(".J-false-droplist").hide();
+		if(isSelfBool){ obj = target;}	
+		if(isParentBool){obj = targetParent;}
+		if(obj && obj.attr("disabled")) return;
+		var box = obj && obj.attr("data-diff") ? $(".J-false-droplist[data-target="+ obj.attr("data-diff") +"]") : $(".J-false-droplist");
+		if(isSelfBool || isParentBool){
+			var offset = obj.offset(),
+				height = obj.outerHeight(),
+				left = offset.left,
+				top = offset.top;
+			$("[data-diff][selected=selected]").removeAttr("selected");
+			obj.attr("selected","selected");
+			box.css({"left" : left + "px","top" : (top + height + 3) +"px"}).slideDown(200).scrollTop(0);
+		}else {
+			var current = $(".J-false-select[selected=selected]"),
+				diff = current.attr("data-diff"),
+				tipbox = current.closest(".works-edit-item").find(".common-error-tip-box"),
+				tip = tipbox.find(".common-error-tip");
+			if(target.hasClass('J-false-droplist-item')){
+				var value = target.attr("data-value"),
+					html = target.html(),
+					selectText = current.find(".J-select-text");
+				if(selectText.length > 0){
+					selectText.is(":input") ? selectText.val(html) : selectText.html(html);
+				}else{
+					current.prepend("<span class='J-select-text'>"+ html +"</span>");	
+				}
+				var reciver = diff ? $(".J-false-droplist-reciver[data-reciver="+ diff +"]") : $(".J-false-droplist-reciver");
+				if(reciver.length > 0){
+					reciver.val(value);
+				}
+				if($.isFunction(callback)){
+					/**
+					 *@param {target} 点击的下拉列表项
+					 *@param {value} 点击的下拉列表项的值
+					 *@param {current} 当前的下拉框
+					 */
+					callback(target,value,current);
+				}
+				if(tipbox.length > 0 && tipbox.is(":visible")){
+					tipbox.hide();
+					tip.text("");
+				}
+			}
+			current.removeAttr("selected");
+			box.hide();
+		}
+	}
+	
+	/**
+	 *等待框
+	 *@param {msg} 等待消息字符串
+	 */
+	function showWaiting ( msg ) {
+		var msg = !!msg && typeof msg == "string" ? msg : "请稍后&hellip;";
+		if ($("#J_showWaiting").length == 0) {
+			$("body").append("<div class='showWaiting' id='J_showWaiting'><div class='showWaitingBg'></div><div class='showWaitingMain'><img src='"+ getAppHost().static +"/images/loading.gif' alt='waiting' />"+ msg +"</div></div>");
+		}
+		var wait = $("#J_showWaiting"),
+			width = wait.outerWidth();
+		wait.css({"margin-left" : "-" + width/2 + "px"});
+		if($.browser.msie && $.browser.version == "6.0"){
+			doSetIE6Waiting();
+			$(window).on({"resize" : doSetIE6Waiting , "scroll" : doSetIE6Waiting});
+		}
+		$.waitingTime = setTimeout(function(){
+			wait.show();
+		},500);
+	}
+	function doSetIE6Waiting (){
+		var scrollTop = $(window).scrollTop();
+		$("#J_showWaiting").css("top" , scrollTop);
+	}
+	
+	/**
+	 *全站公告提示框
+	 *@param {msg} 提示信息
+	 *@param {config} css 属性
+	 *@param {callback} 回调函数
+	 */
+	function showNotice( msg , config ,callback){
+		var cfg = $.extend(true , {
+			"container" : "",
+			"styles" :{
+				"height" : "33px",
+				"line-height" : "33px",
+				"width" : "990px",
+				"text-align" : "center",
+				"background-color" : "#E48632",
+				"color" : "#fff",
+				"font-size" :"14px",
+				"font-weight":"bold"
+			}
+		} , config);
+		var styles = "",
+			container = cfg.container;
+		for(var i in cfg['styles']){
+			styles +=  i + ":" + cfg['styles'][i] + ";";
+		}
+		var obj = $("<div id='J_showNotice' style='background-color:"+ cfg["styles"]["background-color"] +";'><div style='margin:0px auto;"+ styles +"'>"+ msg +"</div></div>");
+		if(container.length > 0){
+			container.before(obj);
+		}
+		if(typeof config == "function"){
+			callback = config;
+		}
+		typeof callback == "function" && callback(obj);
+	}
+
+	function setAdBanner(imgUrl, options, title, linkUrl,insertType, relationalElem,styles){
+		var opts = $.extend(true,{
+			type : "append",
+			elem : $("body"),
+			attrs : {
+				"href" : "",
+				"title" : "",
+				"target" : "_blank"
+			},
+			styles : {
+				"display" : "block"
+			},
+			imgAttrs : {
+				"alt" : "",
+				"src" : ""
+			},
+			imgStyles : {
+
+			}
+		},options);
+		var bn = $("<a></a>").attr(opts.attrs).css(opts.styles).append($("<img />").attr(opts.imgAttrs).css(opts.imgStyles));
+		switch(opts.type){
+			case "append" :
+				opts.elem.append(bn);
+				break;
+			case "prepend" :
+				opts.elem.prepend(bn);
+				break;
+			case "before" :
+				opts.elem.before(bn);
+				break;
+			case "after" :
+				opts.elem.after(bn);
+				break;
+		}
+	}
+
+	var overLayer = function(options){
+		var opts = $.extend(true, {
+			"content" : "",
+			"url" : "",
+			"callback" : function(){
+
+			}
+		}, options);
+		var referrer = document.referrer;
+		var url = $.trim(opts.url) .length > 0 ? opts.url : (referrer && typeof referrer === "string" && $.trim(referrer).length > 0) ? referrer : "";
+		var overLayer = "<div id=\"J_overLayer\" style=\"position:fixed;_position:absolute;left:0;top:0;width:100%;height:100%;z-index:9999;font-size:14px;text-align:center;\">";
+			overLayer += "<div style=\"width:100%;height:100%;background-color:#000;opacity:0.5;filter:alpha(opacity=50);\" id=\"J_overLayerBg\"></div>";
+			overLayer += "<div style=\"position:absolute;background-color:#f2f2f2;border-radius:8px;padding:20px;width:344px;left:50%;top:50%;margin-left:-192px;margin-top:-50px;z-index:100;\" id=\"J_overLayerContent\">"+ opts.content;
+			overLayer +="<div style=\"text-align:center;margin-top:10px;\">";
+			if(!!url){
+				overLayer += "<input type=\"button\" style=\"background-color:#555;padding:5px 10px;margin-top:10px;color:#fff;\" onclick=\"location.href='"+ url +"';\" value=\"返回\" >";
+			}
+			overLayer +="</div>";
+			overLayer += "</div>";
+			overLayer += "</div>";
+		$("body").append(overLayer);
+
+		var w = $(window);
+		var layerContent = $("#J_overLayerContent");
+		var height = layerContent.outerHeight();
+		var width = layerContent.outerWidth();
+		function fix(){
+			var windowHeight = w.height();
+			var windowWidth = w.width();
+			var scrollLeft = w.scrollLeft();
+			var scrollTop = w.scrollTop();
+			$("#J_overLayer,#J_overLayerBg").css({"height" : (windowHeight + scrollTop) + "px", "width" : (windowWidth + scrollLeft) + "px"});
+			layerContent.css({"margin-top": 0 , "margin-left" : 0 , "top" : (scrollTop +(windowHeight - height)/2) + "px" , "left" : (scrollLeft + (windowWidth - width)/2) + "px"});
+		}
+		if($.browser.msie && $.browser.version === "6.0"){
+			fix();
+			w.on({"scroll" : fix, "resize" : fix});
+		}else{
+			layerContent.css("margin-top", "-" + height/2 + "px");
+		}
+	}
+
+
+	var Slider = function (options) {
+	    var opts = $.extend(true, {
+	        "container": "",
+	        "slider": "",
+	        "item": "",
+	        "speed": 500,
+	        "interval": 3000,
+	        "auto": true,
+	        "trigger": "",
+	        "show" : ""
+	    }, options);
+
+	    this.container = $(opts.container);
+	    this.slider = $(opts.slider);
+	    this.item = $(opts.slider).find(opts.item);
+	    this.speed = parseInt(opts.speed);
+	    this.interval = parseInt(opts.interval);
+	    this.trigger = $(opts.trigger);
+	    this.auto = opts.auto;
+	    this.show = opts.show;
+	    this.init();
+	}
+	Slider.prototype = {
+	    init: function () {
+	        if (this.container.length === 0) {
+	            throw new Error("container is not found.");
+	            return;
+	        }
+	        if (this.slider.length === 0) {
+	            throw new Error("slider is not found.");
+	            return;
+	        }
+	        if (this.item.length === 0) {
+	            throw new Error("item is not found.");
+	            return;
+	        }
+	        var width = this.container.width();
+	        this.itemWidth = this.item.first().outerWidth();
+	        var sliderSize = this.item.length;
+	        if(this.show && this.show == "fade"){
+	        	this.item.css({
+	        		"z-index" : 10,
+	        		"opacity" : 0,
+	        		"float": "none",
+	        		"display" : "none"
+	        	}).eq(0).css({
+	        		"z-index" : 11,
+	        		"opacity" : 1,
+	        		"float" : "none",
+	        		"display" : "inline-block"
+	        	});
+	        }else{
+	        	this.slider.css("width", this.itemWidth * sliderSize + "px");
+	        }
+	        if (this.trigger.length > 0) {
+	            this.trigger.first().addClass("on").siblings().removeClass("on");
+	        }
+	    },
+	    start: function () {
+	        var trigger = this.trigger;
+	        var slider = this.slider;
+	        var item = this.item;
+	        var itemWidth = this.itemWidth;
+	        var that = this;
+	        if (trigger.length > 0) {
+	            trigger.on("click", function () {
+	                var self = $(this);
+	                var index = self.index();
+	                that.cur = index;
+	                animteFunc(self, index);
+	            });
+	        }
+	        if (this.auto) {
+	            var timer;
+	            var itemLen = item.length;
+	            var i = 0;
+
+	            timeoutFunc(i);
+
+	            this.container.hover(function () {
+	                if (timer) {
+	                    clearTimeout(timer);
+	                }
+	            }, function () {
+	                timeoutFunc(that.cur);
+	            });
+	        }
+
+	        function animteFunc(obj, i) {
+	            obj.addClass("on").siblings().removeClass("on");
+	            if(that.show == "fade"){
+	            		item.eq(i).css({"display":"inline-block","z-index": 11}).animate({
+	            			"opacity" : 1
+	            		}, that.speed).siblings().hide().css("opacity",0);
+	            }else{
+		            slider.stop(true, true).animate({
+		                "left": "-" + i * itemWidth + "px"
+		            }, that.speed);
+	            }
+	        }
+
+	        function timeoutFunc(i) {
+	            timer = setTimeout(function () {
+	                i++;
+
+	                if (i > itemLen - 1) {
+	                    i = 0;
+	                }
+
+	                that.cur = i;
+
+	                animteFunc(trigger.eq(i), i);
+
+	                timer = setTimeout(arguments.callee, that.interval);
+
+	            }, that.interval);
+	        }
+	    }
+	};
+
+	
+	var widget = {
+		showSuccessTip : showSuccessTip,
+		showErrorTip : showErrorTip,
+		falseConfirm: falseConfirm,
+		showFalseDroplist : showFalseDroplist,
+		showWaiting : showWaiting,
+		showNotice : showNotice,
+		setAdBanner : setAdBanner,
+		overLayer : overLayer,
+		Slider : Slider
+	}
+	
+	window.Widget = widget || {};
+})(this);

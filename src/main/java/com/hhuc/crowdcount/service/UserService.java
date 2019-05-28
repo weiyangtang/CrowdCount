@@ -32,5 +32,13 @@ public class UserService {
         return userDao.getAllUsers();
     }
 
+    public int register(User user) {
+        if (userDao.getUserById(user.getUser_id()) != null)
+            return -1;
+        else {
+            return userDao.insertUser(user);
+        }
+    }
+
 
 }

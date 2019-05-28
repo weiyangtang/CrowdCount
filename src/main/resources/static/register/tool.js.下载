@@ -1,0 +1,173 @@
+(function(window){
+	//得到输入的文本中重复的单词
+	function getRepeatStr(a , b){
+  		if(a == b){
+			if($.inArray(a,$.repeatArray) == -1 && !/^[\s'　']*$/.test(a)){
+				$.repeatArray.push(a);	
+			}
+			return 0;
+		}else if(a > b){
+			return 1;
+		}else {
+			return -1;
+		}
+	}
+	//刷新
+	function doRefresh(url){
+		if(!url){
+			url = window.location.href;
+		}
+		window.location.href = url;
+	}
+	
+	//输入框获取和失去焦点时操作提示语
+	function makeInputTip(txt, tip, msg) {
+		var val = txt.val();
+		if ($.trim(val) != "") {
+			tip.hide();
+		}else{
+			tip.show();	
+		}
+		
+		tip.click(function(){
+			$(this).hide();
+			txt.focus();
+		});
+		txt.focus(function () {
+			tip.hide();
+		}).blur(function () {
+			if ($.trim(txt.val()) == "") {
+				tip.show();
+				if (msg !== undefined) tip.html(msg);
+			}
+		});
+	}
+	
+	//滚动通用js
+	function animateScroll(element, childTagName) {
+		element.hover(function(){if($.scrollTime) clearTimeout($.scrollTime);},function(){makeScroll(element,childTagName);});
+		makeScroll(element, childTagName);
+	}
+	
+	function makeScroll(element, childTagName){
+		$.scrollTime = setTimeout(function(){
+			var height = element.find(childTagName + ":last").height();
+			element.find(childTagName+":last").css({ "height": "0px", "opacity": "0"}).prependTo(element);
+			element.find(childTagName + ":first").animate({ "height": height+"px" }, 1000).animate({ "opacity": 1 }, 500);
+			makeScroll(element, childTagName);
+		},3000);	
+	}
+	
+	//限制符合reg规则的不能输入
+	function limitInput(obj,reg){
+		var val = obj.val();
+		if(val.length > 0 && reg.test(val)){
+			obj.val(val.replace(reg,""));
+		}
+	}
+	
+	//输入时得到输入内容长度
+	function getInputLength(content,lenObj,minLen,maxLen){
+		var len = content.val().length;
+		lenObj.html(len);
+		if(len < minLen || len > maxLen){
+			lenObj.css("color","red");
+		}else {
+			lenObj.removeAttr("style");
+		}
+	}
+	
+	//拼装格式化时间
+	function getFormatTime(t) {
+		if(t){
+			var time = eval('new ' + t.substr(1, t.length - 2));
+		}else {
+			var time = new Date();
+		}
+		var year = time.getFullYear(),
+			month = time.getMonth() + 1,
+			day = time.getDate(),
+			hour = time.getHours(),
+			minute = time.getMinutes(),
+			second = time.getSeconds();
+		if (month < 10) month = "0" + month;
+		if (day < 10) day = "0" + day;
+		if (hour < 10) hour = "0" + hour;
+		if (minute < 10) minute = "0" + minute;
+		if (second < 10) second = "0" + second;
+		var tim = year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second;
+		return tim;
+	}
+	
+	function fixUploadHeight(obj){
+		var self = $(parent.document).find("#" + obj),
+			height = $("body").height(),
+			windowHeight = $(parent.window).height();
+		if(height > windowHeight - 66){
+			height = windowHeight - 66;
+		}
+		self.css("height",height + "px");
+		if(self.closest("[role=alertdialog]").length > 0){
+			self.closest("[role=alertdialog]").css({"height" : (height+47)+"px" ,"margin-top" : -(height+47)/2 + "px"});
+		}
+	}
+	
+	/**
+	 *得到上传文件的属性: 名字、格式、大小、最后修改日期
+	 *@param {fileDom} 文件上传框,dom
+	 *@param {callback} 回调函数
+	 */
+	function getFileProperty(fileDom , callback){
+		if(fileDom.files){
+			var files = fileDom.files;
+			if(files.length > 0){
+				var img = files[0],
+					type = img.type.split("/")[1];
+				callback({
+					name : img.name,
+					type : type,
+					size : img.size,
+					lastModifiedDate : img.lastModified || img.lastModifiedDate
+				});
+				return;
+			}
+		}else{
+			var fileUrl = fileDom.value;
+			if(/^\w+\:\\.+$/.test(fileUrl)){
+				fileUrl = fileUrl.replace(/\\/g,"\\");
+			}
+			var imgElement = new Image();
+			imgElement.onload = imgElement.onreadystatechange = function(){
+				if(!imgElement.readyState || imgElement.readyState == "complete" || imgElement.readyState == "loaded"){
+					imgElement.onload = imgElement.onreadystatechange = null;
+					var name = imgElement.nameProp,
+						type = name.substring(name.lastIndexOf(".") + 1,name.length);
+					callback({
+						name : name,
+						type : type,
+						size : imgElement.fileSize,
+						lastModifiedDate : imgElement.fileModifiedDate	
+					});
+					imgElement = null;
+					return;
+				}
+			}
+			imgElement.style.display = "none";
+			imgElement.src = fileUrl;
+		}
+	}
+	
+	var Tool = {
+		getRepeatStr : getRepeatStr,
+		doRefresh : doRefresh,
+		makeInputTip : makeInputTip,
+		animateScroll : animateScroll,
+		limitInput : limitInput,
+		getInputLength : getInputLength,
+		getFormatTime : getFormatTime,
+		fixUploadHeight : fixUploadHeight,
+		getFileProperty : getFileProperty
+	}
+	
+	window.Tool = Tool;
+})(this);

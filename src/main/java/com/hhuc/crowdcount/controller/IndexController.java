@@ -100,5 +100,30 @@ public class IndexController {
         return "redirect:login";
     }
 
+    /**
+     * 注册页面
+     */
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public String registerPage() {
+        return "register";
+    }
+
+    /**
+     * 注册
+     * 0 验证码错误，-1 账号已存在，1插入成功
+     */
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @ResponseBody
+    public int register(User user, @RequestParam(value = "VerifyCode") String code, HttpServletRequest request) {
+        System.out.println(user);
+        System.out.println(code);
+        HttpSession session = request.getSession();
+        String realCode = "";
+        if (session.getAttribute("code") != null)
+            realCode = (String) session.getAttribute("code");
+        if (!realCode.toLowerCase().trim().equals(code.toLowerCase().trim()))
+            return 0;//验证码错误
+        else return userService.register(user);
+    }
 
 }

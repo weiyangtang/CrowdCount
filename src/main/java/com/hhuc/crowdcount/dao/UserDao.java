@@ -16,6 +16,6 @@ public interface UserDao {
     @Select("SELECT * FROM `user` WHERE user_id=#{user_id}")
     User getUserById(String user_id);
 
-    @Insert("INSERT INTO user(user_id,user_password,user_name,user_phone,user_sex,user_age) VALUES(#{user_id},#{user_password},#{user_name},#{user_phone},#{user_sex},#{user_age})")
+    @Insert("INSERT INTO user(user_id,user_password,user_name,user_email) VALUES(#{user_id},#{user_password},#{user_name},#{user_email})")
     int insertUser(User user);
 }

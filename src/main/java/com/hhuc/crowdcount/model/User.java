@@ -10,5 +10,6 @@ public class User {
     private int user_age;
     private String user_phone;
     private String user_sex;
+    private String user_email;
 
 }

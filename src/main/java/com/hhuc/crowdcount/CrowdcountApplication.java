@@ -9,5 +9,4 @@ public class CrowdcountApplication {
     public static void main(String[] args) {
         SpringApplication.run(CrowdcountApplication.class, args);
     }
-
 }

@@ -27,4 +27,13 @@ public class CameraController {
         return cameraService.getAllCameraInfo();
     }
 
+    /**
+     * 摄像头的地址
+     */
+    @RequestMapping(value = "/camera/cameraLocation", method = RequestMethod.GET)
+    public String CameraLocationPage() {
+        return "/camera/cameraLocation";
+    }
+
+
 }

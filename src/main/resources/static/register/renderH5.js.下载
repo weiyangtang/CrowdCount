@@ -1,0 +1,102 @@
+﻿
+function getCookie(name) {
+    var arr = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)(;|$)"));
+    if (arr != null) return decodeURIComponent(arr[2]); return null;
+}
+function setCookie(key, value, options) {
+    options = options || {};
+    var expires = "";
+    if (typeof options.expires != 'undefined') {
+        expires = options.expires;
+        if (typeof options.expires == "number") {
+            expires = new Date();
+            expires.setTime(expires.getTime() + options.expires * 24 * 60 * 60 * 1000);
+        }
+    }
+    // 写入cookie
+    if (arguments.length > 1) {
+        return (document.cookie = [
+            encodeURIComponent(key), '=', encodeURIComponent(value),
+            '; expires=' + expires,
+            options.path ? ';path=' + options.path : '',
+            options.domain ? ';domain=' + options.domain : '',
+            options.secure ? ';secure' : '',
+        ].join(' '));
+    }
+}
+function renderH5() {
+    var ua = navigator.userAgent.toLowerCase();
+    var isM = false;
+    function deviceDetect(needle) {
+        needle = needle.toLowerCase();
+        return ua.indexOf(needle) !== -1;
+    }
+    if (deviceDetect('iPhone') || deviceDetect('Android') || deviceDetect('iPod')) {
+        if (window.screen.width < 960) {
+            isM = true;
+        }
+    }
+    if (!isM) { return; }
+    if (location.href.indexOf("from=h5") > 0) {
+            setCookie("fromh5", "1",{domain: 'nipic.com'});
+        return;
+    }
+    if (getCookie("fromh5") == "1") {
+        return;
+    }
+    var b = "http://";
+    var baseUrl = 'http://m.nipic.com';
+    var curr = location.href.toLowerCase();
+    // 详细页不能根据地址跳转，因为没有提供picid和pictype。在detailV2.js中同步修改
+    // 买家后台首页在对应的js中跳转。地址情况较多
+    var go = "";
+    // 首页
+    if (curr.indexOf("http://www.nipic.com/index.html") == 0 || curr == "http://www.nipic.com/" || curr.indexOf("http://www.nipic.com/#") == 0 || curr.indexOf("http://www.nipic.com/?") == 0) {
+        go = baseUrl+"/dist/index.html";
+    }
+    // 专题页
+    if (curr.indexOf("http://www.nipic.com/topic/") == 0) {
+        var endNum = curr.lastIndexOf('_');
+        var startNum = curr.indexOf('_');
+        var tid = curr.substring(startNum + 1, endNum);
+        if (tid) {
+            go = baseUrl+"/dist/index.html#/specialTopic/" + tid;
+        }
+    }
+    // 详细页,比较特殊，需要取数据
+    if (curr.indexOf("http://www.nipic.com/show/") == 0) {
+        if ($) {
+            $(function () {
+                location.href = baseUrl+"/dist/index.html#/detail/" + $("#worksId").val();
+            })
+        }
+    }
+
+    // 登录页面
+    if (curr.indexOf("http://login.nipic.com/") == 0 || curr.indexOf("https://login.nipic.com/") == 0) {
+        if (curr != 'https://login.nipic.com/user' && curr != 'http://login.nipic.com/user') {
+            go = baseUrl + "/dist/index.html#/login"
+        } else {
+           go=''
+        }
+    }
+    // 注册页面
+    if (curr.indexOf("http://login.nipic.com/reg") == 0 || curr.indexOf("https://login.nipic.com/reg") == 0) {
+        go = baseUrl+"/dist/index.html#/register"
+    }
+
+    // 后台首页不跳转， 专题不跳转，手机默认不登陆
+
+    // 搜搜
+    if (curr.indexOf("http://soso.nipic.com/") == 0) {
+        var qArr = curr.split("?");
+        if (qArr.length != 2) {
+            return;
+        }
+        go = baseUrl+"/dist/index.html#/soso?" + qArr[1]
+    }
+    if (go) location.href = go;
+}
+(function(){
+    renderH5();
+})()

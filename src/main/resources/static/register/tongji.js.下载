@@ -1,0 +1,22 @@
+(function () {
+    function addScript(varSrc, varInnerHTML) {
+        var varScript = document.createElement("script");
+        if (varSrc != "") {
+            varScript.src = varSrc;
+        }
+        varScript.language = "javascript";
+        varScript.type = "text/javascript";
+        varScript.defer = 'defer';
+        varScript.async = 'async';
+        if (varInnerHTML != "") {
+            varScript.text = varInnerHTML;
+        }
+        var el = document.getElementsByTagName("body");
+        el[0].appendChild(varScript);
+    }
+    function stat() {
+        var _bdhmProtocol = (("https:" == document.location.protocol) ? "https://" : "http://");
+        addScript(_bdhmProtocol + "hm.baidu.com/hm.js?d60c24a3d320c44bcd724270bc61f703", "");
+    }
+    stat();
+})()

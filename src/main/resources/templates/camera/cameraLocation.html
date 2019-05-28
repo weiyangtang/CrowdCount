@@ -1,0 +1,189 @@
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <title>
+        摄像头分布地图
+    </title>
+    <link rel="stylesheet" type="text/css" th:href="@{/static/huangcss/bootstrap.min.css}">
+    <script type="text/javascript" th:src="@{/static/huangjs/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/huangjs/echarts.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/huangjs/jquery-1.9.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/static/huangjs/echarts.js}"></script>
+    <script type="text/javascript" th:src="@{/static/huangjs/bmap.js}"></script>
+    <script type="text/javascript" th:src="@{http://api.map.baidu.com/api?v=2.0&ak=0UqXGL98FSmi22w2Rl6HK56I}"></script>
+
+
+
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">实时监控</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="cam_location.html">监控地图分布</a></li>
+                <li ><a href="mypic.html">监控现场</a></li>
+                <li><a href="my_cam_data.html">人流数据</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        选择监控摄像机
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">一号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">二号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">三号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">四号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">无号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">六号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">七号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">八号摄像机</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">九号摄像机</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
+<div id="main" style="width: 100%;height: 600px;"></div>
+
+<script type="text/javascript">
+    var myChart = echarts.init(document.getElementById('main'));
+
+    var geoCoordMap = {
+        "图书馆":[119.9862750912,31.8249960890],
+        "为学楼":[119.9855401659,31.8242029491],
+        "英才楼":[119.9867578890,31.8236513937],
+        "厚德楼":[119.9901750234,31.8237152104],
+        "二食堂":[119.9900355485,31.8258028966]
+    };
+    var mydata = [
+        { name: "图书馆", value: 23 },
+        { name: "为学楼", value: 12 },
+        { name: "英才楼", value: 36 },
+        { name: "厚德楼", value: 55 },
+        { name: "二食堂", value: 123 }
+    ];
+
+    var convertData = function (data)
+    {
+        var res = [];
+        for (var i = 0; i < data.length; i++) {
+            var geoCoord = geoCoordMap[data[i].name];
+            if (geoCoord) {
+                res.push({
+                    name: data[i].name,
+                    value: geoCoord.concat(mydata[i].value)
+                });
+                //res.push(geoCoord.concat(data[i].value));
+                // alert(res);
+            }
+        }
+        return res;
+    };
+
+    option = {
+        title: {
+            text: '摄像机分布位置',
+            subtext: '访问官网',
+            sublink: 'http://www.baidu.com',      //写首页地址
+            left: 'center',
+            textStyle: {
+                color: 'red'
+            }
+        },
+        visualMap: {
+            left: 'right',
+            min: 0,
+            max: 300,
+            splitNumber: 10,
+            maxOpen: true,                       //界面上会额外多出一个『> max』的选块。
+            color: ['yellow', 'red', 'black'],
+            textStyle: {
+                color: '#fff'
+            }
+        },
+        geo: {
+            label: {
+                emphasis: {
+                    show: false
+                }
+            },
+            itemStyle: {
+                normal: {
+                    areaColor: '#323c48',
+                    borderColor: '#111'
+                },
+                emphasis: {
+                    areaColor: '#2a333d'
+                }
+            }
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: function (params) {
+                return params.name + '</br>'
+                    + '&nbsp&nbsp&nbsp 人数: '
+                    + params.value[2];
+            },
+            backgroundColor: 'rgba(245, 245, 245, 0.8)',
+            borderWidth: 1,
+            borderColor: '#ccc',
+            padding: 10,
+            textStyle: {
+                color: '#000'
+            },
+        },
+        bmap: {
+            center: [119.9870144555,31.8249192071],
+            zoom: 18,
+            roam: true,
+        },
+        series: [
+            {
+                name: '摄像头监测的人流数',
+                type: 'scatter',
+                coordinateSystem: 'bmap',
+                data: convertData(mydata),
+                symbolSize: 20,//点大小
+                label: {
+                    normal: {
+                        show: false
+                    },
+                    emphasis: {
+                        show: false
+                    }
+                },
+                itemStyle: {//点边缘
+                    emphasis: {
+                        borderColor: '#000000',
+                        borderWidth: 1
+                    }
+                }
+            }
+        ]
+    }
+
+    myChart.setOption(option);
+</script>
+
+</body>
+
+</html>

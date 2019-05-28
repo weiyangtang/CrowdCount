@@ -1,0 +1,164 @@
+.ico{background-image:url(../images/ico_png24.png?t=20160316);background-repeat:no-repeat;}
+.ico1{background-image:url(../images/bg_png24.png?t=20160316);background-repeat:no-repeat;}
+.design-ico{width:23px;height:20px;background-position:0px 0px;}/*设计title图标*/
+.photo-ico{width:24px;height:18px;background-position:0px -26px;}/*摄影title图标*/
+.media-ico{width:24px;height:18px;background-position:0px -46px;}/*多媒体title图标*/
+.design-original-ico{width:23px;height:20px;background-position:0px -403px;}
+.photo-original-ico{width:24px;height:18px;background-position:0px -423px;}
+.media-original-ico{width:24px;height:18px;background-position:0px -442px;}
+.down-rank-ico{width:23px;height:18px;background-position:0px -67px;}/*下载排行title小图标*/
+.download-ico{width:11px;height:10px;background-position:0px -161px;}/*下载小图标*/
+.download-ico2{width:19px;height:19px;background-position:0px -331px;}
+.trade-ico{width:23px;height:19px;background-position:0px -1209px;}
+.keywords-ico{width:24px;height:23px;background-position:0px -86px;}/*热搜榜title图标*/
+.famous-ico{width:21px;height:23px;background-position:-1px -113px;}/*昵图英雄榜title图标*/
+.list-ico-1{width:4px;height:4px;font-size:0px;line-height:0px;background-position:0px -174px;}
+.original-ico{width:21px;height:21px;background-position:-1px -137px;}/*原创推荐title图标*/
+.original-ico2{width:24px;height:17px;background-position:0 -1271px;}
+.comercial-ico{width:29px;height:31px;background-position:0px -197px;}/*商用作品图标*/
+.comercial-ico2{width:28px;height:27px;background-position:0px -1289px;}
+.comercial-ico3{width:23px;height:23px;background-position:0px -1317px;}
+.comercial-ico4{width: 55px;height: 25px;background-position: -541px -624px;}
+.comercial-pos1{top:-3px;right:-1px;}
+.search-original-ico{width:12px;height:11px;background-position:0px -231px;}/*搜索综合图标*/
+.search-asc-ico{width:11px;height:13px;background-position:-15px -260px;}/*搜索升序图标*/
+.search-desc-ico{width:11px;height:13px;background-position:-15px -245px;}/*搜索降序图标*/
+.crumb-ico{width:16px;height:15px;background-position:0px -276px;}/*导航*/
+.report-ico{width:6px;height:16px;font-size:0px;background-position:-31px -504px;}/*举报*/
+.complain-ico{width:16px;height:16px;font-size:0px;background-position:-21px -275px;}/*申诉*/
+.favourite-ico{width:17px;height:16px;background-position:-1px -311px;}/*收藏*/
+.download-error-ico{width:16px;height:16px;background-position:0px -353px;}/*下载出错提示*/
+.download-notice-ico{width:36px;height:29px;background-position:0px -372px;}/*下载注意*/
+.correct-ico{width:16px;height:16px;background-position:0px -488px;}
+.error-ico{width:16px;height:16px;background-position:0px -353px;}
+.error-ico2{width:16px;height:16px;display:inline-block;vertical-align:middle;background-position:0px -1166px;}
+.error-ico3{display:inline-block;width:19px;height:19px;vertical-align:middle;background-position:0px -1230px;}
+.addFav-ico{width:14px;height:14px;background-position:-23px -353px;}
+.successTip-ico,.correct-ico2{width:24px;height:24px;background-position:0px -462px;}
+.correct-ico2-disabled{width:24px;height:24px;background-position:0px -1183px;}
+.help-content-ico{width:20px;height:22px;background-position:0px -505px;}
+.menu-works-upload-ico{width:15px;height:15px;background-position:0px -529px;}
+.menu-works-manage-ico{width:17px;height:14px;background-position:0px -545px;}
+.menu-spec-manage-ico{width:17px;height:14px;background-position:0px -560px;}
+.menu-works-fav-ico{width:16px;height:17px;background-position:0px -575px;}
+.menu-gxfen-ico{width:17px;height:16px;background-position:0px -593px;}
+.menu-nibi-ico{width:18px;height:18px;background-position:0px -611px;}
+.menu-loginLog-ico{width:16px;height:17px;background-position:-21px -926px;}
+.menu-exchange-ico{width:17px;height:17px;background-position:0px -631px;}
+.menu-original-level-ico{width:17px;height:16px;background-position:0px -649px;}
+.menu-member-level-ico{width:17px;height:17px;background-position:0px -666px;}
+.message-num{width:19px;height:19px;padding:2px 3px 5px;text-align:center;line-height:19px;background-position:0px -684px;}
+.pic-material-ico{width:24px;height:17px;background-position:0px -713px;}
+.media-material-ico{width:24px;height:17px;background-position:0px -733px;}
+.fav-material-ico{width:21px;height:18px;background-position:0px -752px;}
+.sale-material-ico{width:19px;height:19px;background-position:0 -1341px;}
+.share-material-ico{width:18px;height:17px;background-position:0 -1362px;}
+.nipic-ico{width:16px;height:16px;background-position:0px -772px;}
+.delete-ico{width:13px;height:15px;background-position:-24px -293px;}
+.bigerror-ico{width:48px;height:48px;background-position:0px -400px;}
+.spec-arrow-ico{width:8px;height:7px;font-size:0px;background-position:-15px -161px;}
+.non-commercial-notice-ico{width:24px;height:22px;background-position:0px -790px;}
+.non-commercial-help-ico{width:24px;height:24px;background-position:0px -814px;}
+.rank-ico{width:16px;height:14px;background-position:-18px -772px;}
+.spec-edit-ico{width:17px;height:17px;background-position:0px -841px;}
+.spec-delete-ico{width:13px;height:16px;background-position:-24px -841px;}
+.remove-fav-ico{display:inline-block;width:18px;height:17px;background-position:-19px -170px;}
+.faved-ico{display:inline-block;width:17px;height:16px;background-position:-20px -984px;}
+.income-ico{display:inline-block;width:14px;height:14px;background-position:0px -862px;vertical-align:middle;}
+.pay-ico{display:inline-block;width:14px;height:14px;background-position:-23px -862px;vertical-align:middle;}
+.recharge-ico{width:28px;height:28px;background-position:0px -877px;}
+.voucher-ico{width:20px;height:22px;background-position:0px -907px;}
+.just-huitu-ico{width:24px;height:19px;background-position:0px -945px;}
+.not-just-huitu-ico{width:32px;height:19px;background-position:0px -965px;}
+.yes-ico{width:17px;height:13px;background-position:0px -985px;}
+.user-ico{display:inline-block;width:21px;height:23px;background-position:0px -1039px;vertical-align:middle;}
+.email-ico{display:inline-block;width:16px;height:11px;background-position:-21px -488px;vertical-align:middle;}
+.withdraw-notice-ico{width:24px;height:19px;background-position:0px -1063px;}
+.member-ico{width:14px;height:15px;background-position:0px -1083px;}
+.bind-account-arrow{width:11px;height:7px;font-size:0px;background-position:-26px -309px;}
+.email-ico2{width:33px;height:20px;background-position:0px -1100px;}
+.key-ico{width:37px;height:17px;background-position:0px -1122px;}
+.sign-ico{width:22px;height:24px;background-position:0px -1140px;}
+.modify-ico{width:14px;height:14px;background-position:-23px -1039px;}
+.delete-ico2{width:14px;height:14px;background-position:-23px -1084px;}
+.gxfen-ico{width:27px;height:19px;background-position:0 -1250px;}
+.notice-ico{display:inline-block;width:20px;height:15px;vertical-align:middle;background-position:-17px -1166px;}
+.notice-ico2{display:inline-block;width:16px;height:14px;vertical-align:middle;background-position:-21px -1230px;}
+.attachment-ico{width:15px;height:16px;background-position:-22px -754px;}/*附件图标*/
+.reset-ico{width:15px;height:15px;background-position:-22px -318px;}
+/*作品星级*/
+.works-star-level{display:inline-block;width:80px;height:15px;background:url(../images/works_star_png24.png) no-repeat 0px 0px scroll transparent;font-size:0px;overflow:hidden;vertical-align:middle;}
+.works-star-0{background-position:0px 0px;}/*零星*/
+.works-star-1{background-position:0px -16px;}/*零星半*/
+.works-star-2{background-position:0px -32px;}/*一星*/
+.works-star-3{background-position:0px -48px;}/*一星半*/
+.works-star-4{background-position:0px -64px;}/*二星*/
+.works-star-5{background-position:0px -80px;}/*二星半*/
+.works-star-6{background-position:0px -96px;}/*三星*/
+.works-star-7{background-position:0px -112px;}/*三星半*/
+.works-star-8{background-position:0px -128px;}/*四星*/
+.works-star-9{background-position:0px -144px;}/*四星半*/
+.works-star-10{background-position:0px -160px;}/*五星*/
+
+/*新作品星级*/
+.new-works-star-level{display:inline-block;width:85px;height:15px;background-image:url(../images/new_works_star_png24.png);background-repeat:no-repeat;font-size:0px;overflow:hidden;vertical-align:middle;}
+.new-works-star-0{background-position:0 0;}
+.new-works-star-1{background-position:0 -16px;}
+.new-works-star-2{background-position:0 -32px;}
+.new-works-star-3{background-position:0 -48px;}
+.new-works-star-4{background-position:0 -64px;}
+.new-works-star-5{background-position:0 -80px;}
+.new-works-star-6{background-position:0 -96px;}
+.new-works-star-7{background-position:0 -112px;}
+.new-works-star-8{background-position:0 -128px;}
+.new-works-star-9{background-position:0 -144px;}
+.new-works-star-10{background-position:0 -160px;}
+
+/*原创等级*/
+.original-grade{display:inline-block;width:19px;height:18px;vertical-align:middle;background-image:url(../images/original_grade_png24.png);background-repeat:no-repeat;overflow:hidden;}
+.original-grade0{background-position:0 -199px;}
+.original-grade1{background-position:0 0;}
+.original-grade2{background-position:0 -20px;}
+.original-grade3{background-position:0 -40px;}
+.original-grade4{background-position:0 -60px;}
+.original-grade5{background-position:0 -80px;}
+.original-grade6{background-position:0 -100px;}
+.original-grade7{background-position:0 -120px;}
+.original-grade8{background-position:0 -140px;}
+.original-grade9{background-position:0 -160px;}
+.original-grade10{background-position:0 -180px;}
+/*会员等级*/
+.member-grade{display:inline-block;height:15px;vertical-align:middle;background-image:url(../images/member_grade_png24.png);background-repeat:no-repeat;overflow:hidden;}
+.member-grade0{width:80px;background-position:0 0;}
+.member-grade1{width:80px;background-position:0 -16px;}
+.member-grade2{width:80px;background-position:0 -32px;}
+.member-grade3{width:80px;background-position:0 -48px;}
+.member-grade4{width:80px;background-position:0 -64px;}
+.member-grade5{width:85px;background-position:0 -80px;}
+.member-grade6{width:85px;background-position:0 -96px;}
+.member-grade7{width:85px;background-position:0 -112px;}
+.member-grade8{width:85px;background-position:0 -128px;}
+.member-grade9{width:85px;background-position:0 -144px;}
+.member-grade10{width:85px;height:14px;background-position:0px -160px;}
+.member-gradevip{width:26px;background-position:-46px -216px;}
+.member-gradevip1,.member-gradevip2,.member-gradevip3,.member-gradevip4,.member-gradevip5{width:45px;height:19px;}
+.member-gradevip1{background-position:0 -176px;}
+.member-gradevip2{background-position:-46px -176px;}
+.member-gradevip3{background-position:0 -196px;}
+.member-gradevip4{background-position:-46px -196px;}
+.member-gradevip5{background-position:0 -216px;}
+/*关闭图标*/
+.close-ico3{background-image: url(../images/ico-close.png);background-repeat: no-repeat;background-position-y:8px;}
+.common-close-ico {display: inline-block; width: 19px;height: 19px;vertical-align: middle;position:absolute;right:5px;}
+.gift-ico3 {background-image: url(../images/gift.png);background-repeat: no-repeat;}
+.common-gift-ico3 {display:inline-block;width:25px;height:25px;vertical-align:middle;}
+.kc-ico3 {background: url(../images/kc.png) no-repeat;background-size:100%;}
+.common-kc-ico3 {display:inline-block;width:75px;height:27px;vertical-align:middle;text-align:center;color:#ffffff;line-height: 27px;}
+.money-ico3 {background-image: url(../images/money.png);background-repeat: no-repeat;}
+.common-money-ico3 {display:inline-block;width:25px;height:25px;vertical-align:middle;}
+/*designer2016*/
+.questionMark {display:inline-block;width:21px;height:22px;vertical-align:top;background:url(../event/img/designer2016/wenhao.png) no-repeat;background-size:100%;}
+.designer2016_prompt {position: absolute;top: 12px;width: 420px;left: 130px;padding: 10px;z-index: 9999; background-color: #f2f7fb;color: #356c9b;font-size: 12px;line-height: 20px;border: 1px solid #accde7;}
+.designer2016-pop {position:absolute;top:53%;width:650px;height:320px;left:30%;z-index:4444;}
+.designer2016-ul {padding:0px 30px;font-size:14px;}
+.designer2016-li {text-indent:2em;line-height:25px;}

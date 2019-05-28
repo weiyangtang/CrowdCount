@@ -9,6 +9,7 @@ public class Camera {
     private int camera_id;
     private String camera_place;
     private String user_id;
+    private int max_num;
 
     //摄像头的附属信息
     private Date time;//最后的通信时间

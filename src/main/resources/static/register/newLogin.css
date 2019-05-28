@@ -1,0 +1,33 @@
+﻿.mainBag{background: url("../images/loginBg.jpg") center top no-repeat; margin-top: 75px;height: 686px;color: #555555;}
+.new-login-box,.new-reg-box{width: 500px;height: 560px;background-color: #ffffff;margin:57px 30px;font-family:"microsoft yahei";border-radius:8px;box-shadow:-26px 25px 8px rgba(0, 0, 0, 0.05);}
+.new-login-dlg{font-family:"microsoft yahei";}
+.new-bag-item-input{width: 325px;height: 28px;padding: 5px 10px;line-height: 22px;border: 1px solid #9eb2cd;background-color: #fff;border-radius: 4px;box-shadow: 1px 1px 3px #dedede inset;font-size: 14px;}
+.new-login-btn,.new-register-btn{width:348px;height: 50px;font-size: 20px;color: #ffffff;font-weight: bold;text-align: center;background-color: #1EBCF0;cursor: pointer;border-radius: 5px;}
+#login .field-validation-error{position: absolute;top: -23px;left: 60px;width: 345px;text-align: center;background-color: #ffe9f4;background-image: none;height: 24px;line-height: 24px;border: 1px solid #e6aeca;box-shadow: none;color: #e10074;padding: 0px ;font-family:microsoft yahei;white-space: normal;font-size: 12px;border-radius: 5px;}
+#register .field-validation-error{position: absolute;top: -14px;right:48px;left:auto; min-width: 339px;max-width:400px; text-align: center;background-color: #ffe9f4;background-image: none;height: 24px;line-height: 24px;border: 1px solid #e6aeca;box-shadow: none;color: #e10074;padding: 0px 3px;font-family: microsoft yahei;white-space: nowrap;font-size: 12px;border-radius: 5px;}
+#register .field-validation-error span,#login .field-validation-error span{white-space:normal;}
+#register .bag-aside-item{padding:8px 0;}
+#register .input-validation-error{border:1px solid #e6aeca;}
+
+.left-triangle{position: absolute;top:0;right: 0;width: 156px;height: 96px;cursor:pointer;}
+.wxBg{background: url("../images/weixin_icon.png") no-repeat;}
+.userBg{background: url("../images/username_icon.png") no-repeat;}
+.regHref{color: #12A4D5;text-decoration: underline;}
+.cycle1{display:inline-block;width: 72px;height: 72px;background:url("../images/loginTypes.png") no-repeat;margin-right: 20px; }
+.cycle1 span{position: absolute;bottom: -25px;width: 72px;text-align: center;color:#999999;font-size:12px;}
+.cycle_s{display:inline-block;width: 37px;height: 37px;background:url("../images/loginType-S.png") no-repeat;margin:8px 8px 0 0; }
+a.huituType{margin-right: 0px;}
+.dlg-qklogin{height: 52px;line-height: 52px;}
+.wxType{background-position: 0px 0px;}
+.qqType{background-position: -92px 0px;}
+.zfbType{background-position: -187px 0px;}
+.huituType{background-position: -280px 0px;}
+.dlg-qklogin .qqType{background-position: -45px 0px;}
+.dlg-qklogin .zfbType{background-position: -92px 0px;}
+.dlg-qklogin .huituType{background-position: -137px 0px;}
+.wx-QR-code{height: 360px;width: 300px;margin: auto;}
+#new-pwd-strength{width:auto;height: 20px;line-height: 20px;}
+#new-pwd-strength span{width: 111px;height: 20px;background-color: #ccc;color: #fff;text-align: center;font-size:12px;border-radius:3px;}
+/*微信登录*/
+.loginPanel .title{display: none}
+#wx_default_tip p{display: inline-block}

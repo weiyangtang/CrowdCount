@@ -18,4 +18,8 @@ public class Camera_people_num {
     private Date time;
     private int num;
     private String image;
+
+    //camera
+    private int max_num;
+    private String camera_place;
 }

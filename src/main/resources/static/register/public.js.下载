@@ -1,0 +1,606 @@
+function feedBackBox() {
+    //内嵌页面无返回顶部条
+    if (top.location != self.location) return;
+    if ($("#feedback").length == 0) {
+        var str = "<div id=\"feedback\" style=\"height:107px;\">";
+        //str += "<div id=\"J-feedback\" class=\"bg-png8 feedback\"></div>";
+        //str += "<a href=\"javascript:void(0)\" id=\"J-feedback-link\" class=\"feedback-link\" hidefocus=\"true\" title=\"反馈\">反馈</a>";
+        str += "<a href=\"http://task.huitu.com\" hidefocus=\"true\" title=\"定制\" class=\"to-huitu\">定制</a>";
+        str += "<div id=\"J-goTop\" class=\"bg-png8 goTop\"></div><a href=\"javascript:window.scrollTo(0,0)\" id=\"J-goTop-link\" class=\"goTop-link\" target=\"_self\" hidefocus=\"true\" title=\"顶部\">顶部</a></div>";
+        $("body").append(str);
+    }
+    showOrHideFloatToolBox();
+    $(window).on({ "resize": showOrHideFloatToolBox, "scroll": showOrHideFloatToolBox });
+    //$("#J-feedback").on("mouseover",function(){$(this).hide().siblings(".feedback-link").css("display","block");});
+    //$("#J-feedback-link").on("mouseout",function(){$(this).hide().siblings(".feedback").show();});
+    $("#J-goTop").on("mouseover", function () { $(this).hide().siblings(".goTop-link").css("display", "block"); });
+    $("#J-goTop-link").on("mouseout", function () { $(this).hide().siblings(".goTop").show(); });
+}
+
+//判断右侧浮动栏出现或者隐藏
+function showOrHideFloatToolBox() {
+    var w = $(window),
+		windowHeight = w.height(),
+		scrollTop = w.scrollTop(),
+		feedback = $("#feedback"),
+		height = feedback.outerHeight();
+    feedback.css({ "margin-left": ($(".layout-width").width() / 2 + 15) + "px" });
+    $.browser.msie && $.browser.version == "6.0" ? feedback.css("top", ((windowHeight - height) / 2 + scrollTop) + "px") : feedback.css("margin-top", "-" + (height / 2) + "px");
+    scrollTop >= windowHeight ? feedback.show() : feedback.hide();
+}
+
+//浮动登录框
+function popLogin() {
+    var str = "<div id='beforeLoading' class='absolute beforeLoading'></div>";
+    str += "<iframe id='popLoginIframe' onload=\"fixIframeHeightWidthLogin(this)\" src='" + getAppHost().login + "/account/poplogin" + "' frameborder='0' scrolling='no'></iframe>",
+    config = { box: "popLogin", bg: "popLoginBg", title: "登录", content: str, boxConfig: { width: "550px", height: "350px" } };
+    loadFloatboxScript(config);
+}
+//重新登录
+function loginAgain(box, bg) {
+    if (box && typeof box == "string") {
+        if ($(box).length > 0) {
+            $(box).remove();
+        }
+    }
+    if (bg && typeof bg == "string") {
+        if ($(bg).length > 0) {
+            $(bg).remove();
+        }
+    }
+    popLogin();
+}
+
+//判断用户是否登录
+function checkLogin() {
+    var session = NI.getCookie("NSESSIONID");
+
+    return session === null || session === "" ? false : true;
+}
+
+//百度分享异步加载
+function loadBaiduShare(objid) {
+    var baiduShareHtml = "<div class=\"bdshare_t bds_tools_32 get-codes-bdshare\" id=\"bdshare\">";
+    baiduShareHtml += "<a class=\"bds_qzone\" title=\"分享到QQ空间\"></a><a class=\"bds_tsina\" title=\"分享到新浪微博\"></a>";
+    baiduShareHtml += "<a class=\"bds_tqq\" title=\"分享到腾讯微博\"></a><a class=\"bds_renren\" title=\"分享到人人网\"></a>";
+    baiduShareHtml += "<a class=\"bds_kaixin001\" title=\"分享到开心网\"></a><span class=\"bds_more\">更多</span><a class=\"shareCount\"title=\"累计分享0次\">0</a>";
+    document.getElementById(objid).innerHTML = baiduShareHtml;
+    var bdshare_js = document.createElement("script");
+    bdshare_js.id = "bdshare_js";
+    bdshare_js.type = "text/javascript";
+    bdshare_js.async = true;
+    bdshare_js.defer = "defer";
+    bdshare_js.setAttribute("data", "type=tools&amp;uid=11531");
+    document.getElementById("bdshare").appendChild(bdshare_js);
+    var bdshell_js = document.createElement("script");
+    bdshell_js.id = "bdshell_js";
+    bdshell_js.type = "text/javascript";
+    bdshell_js.src = "http://share.baidu.com/static/js/shell_v2.js?t=" + new Date().getHours();
+    bdshell_js.async = true;
+    bdshell_js.defer = "defer";
+    document.getElementById("bdshare").appendChild(bdshell_js);
+}
+//检测输入是否为空
+function checkInputEmpty(obj, msg) {
+    var val = obj.val(),
+		tipbox = obj.closest(".works-edit-item").find(".common-error-tip-box"),
+		tip = tipbox.find(".common-error-tip"),
+		msg = msg ? msg : obj.attr("data-msg");
+    if ($.trim(val).length == 0) {
+        tipbox.show();
+        if (msg) tip.text(msg);
+        return false;
+    }
+    return true;
+}
+
+//加载页头用户信息
+function loadUserInfo() {
+    var _session = NI.getCookie("NSESSIONID"),
+		str,
+		domains = getAppHost(),
+		url = window.location.href,
+		login = domains.login + "?backurl=" + NI.getDelParaRemainUrl(url, "backurl"),
+		user = domains.user,
+		logon = domains.login + "/account/logout?backurl=" + NI.getDelParaRemainUrl(url, "backurl"),
+		reg = domains.login + "/reg";
+    if (!checkLogin()) {
+        str = "<a href=\"" + reg + "\" hidefocus=\"true\" target=\"_self\" title=\"注册\">注册</a><span class=\"sepline\">|</span><a href=\"javascript:;\" id=\"J_goLogin\" onclick=\"return false;\" target=\"_self\" hidefocus=\"true\" title=\"登录\">登录</a><span class=\"sepline\">|</span>";
+
+    } else {
+        var nsession = _session.split("|"),
+		  	userid = nsession[1],
+			username = decodeURIComponent(nsession[2]);
+        str = "<a href=\"" + user + "\" hidefocus=\"true\" target=\"_self\" class=\"red\" title=\"" + username + "\">" + username + "</a>";
+        str += "<span class=\"sepline\">|</span><a href=\"javascript:;\" id=\"J_goLogOn\" onclick=\"return false;\" target=\"_self\" hidefocus=\"true\" title=\"退出\">退出</a>";
+        str += "<span class=\"sepline\">|</span><a href=\"" + user + "\" target=\"_self\" hidefocus=\"true\" title=\"我的昵图\">我的昵图</a>";
+        str += "<span class=\"sepline\">|</span><a href=\"" + domains.hi + "/people/" + userid + "\" target=\"_self\" hidefocus=\"true\" title=\"个人主页\">个人主页</a><span class=\"sepline\">|</span>";
+    }
+    $("#userinfo").html(str);
+    $("#J_goLogin").on("click", function () {
+        location.href = login;
+    });
+    $("#J_goLogOn").on("click", function () {
+        location.href = logon;
+    });
+}
+//加载页头用户信息新
+function loadUserInfoV2() {
+    var _session = NI.getCookie("NSESSIONID"),
+       str,
+       domains = getAppHost(),
+       url = window.location.href,
+       $face,
+       login = domains.login + "?backurl=" + NI.getDelParaRemainUrl(url, "backurl"),
+       user = domains.user,
+       logon = domains.login + "/account/logout?backurl=" + NI.getDelParaRemainUrl(url, "backurl"),
+       reg = domains.login + "/reg";
+    if (!checkLogin()) {
+        str = "<a href=\"" + login + "\" class=\"J-btn on mr10 \" hidefocus=\"true\" target=\"_self\">登录</a><a href=\"" + reg + "\" class=\"J-btn\" hidefocus=\"true\" target=\"_self\">注册</a>";
+        $(".newIndex-login").html(str);
+    } else {
+        var nsession = _session.split("|"),
+		  	userid = nsession[1],
+			username = decodeURIComponent(nsession[2]);
+        var beforeStr = "<div class=\"userInfo relative\"><div class=\"userinfo-box\">";
+        var afterStr = "<span class=\"ml5 userinfo-name ellipsis\">" + username + "</span><b></b></div><div class=\"menu-list none font14\"><a href=\"" + user + "\" target=\"_self\" hidefocus=\"true\" title=\"我的昵图\">我的昵图</a><a href=\"" + domains.hi + "/people/" + userid + "\" target=\"_self\" hidefocus=\"true\" title=\"个人主页\">我的空间</a><a href=\"http://user.nipic.com/upload/index1\" target=\"_self\" hidefocus=\"true\" title=\"上传作品\">上传作品</a><a href=\"http://user.nipic.com/message/messagelist\" target=\"_self\" hidefocus=\"true\" title=\"我的消息\">我的消息</a><a href=\"" + logon + "\" id=\"J_goLogOn\"  target=\"_self\" hidefocus=\"true\" title=\"退出\">退出</a></div></div>";
+        $.ajax({
+            "type": "get",
+            "url": getAppHost().www + "/Userajax/AccountInfo",
+            "data": { "userid": userid },
+            "dataType": "jsonp",
+            "success": function (r) {
+                if (r && r.code == "2000") {
+                    var faceUrl = r.data;
+                    str = "<img src=\"" + faceUrl + "\" class=\"headPortrait\"/>";
+                    str = beforeStr + str + afterStr;
+                    $(".newIndex-login").html(str);
+                } else {
+                    str = "<a href=\"" + login + "\" class=\"J-btn on mr10 \" hidefocus=\"true\">登录</a><a href=\"" + reg + "\" class=\"J-btn\" hidefocus=\"true\">注册</a>";
+                    $(".newIndex-login").html(str);
+                }
+            },
+            "error": function () {
+                if (typeof console != "undefined" && console.log) console.log("登录错误，请联系管理员");
+                str = "<a href=\"" + login + "\" class=\"J-btn on mr10 \" hidefocus=\"true\">登录</a><a href=\"" + reg + "\" class=\"J-btn\" hidefocus=\"true\">注册</a>";
+                $(".newIndex-login").html(str);
+                return;
+            }
+        });
+
+    }
+    $(document).on("click", ".userInfo", function () {
+        location.href = "http://user.nipic.com";
+    });
+    $(document).on("mouseenter", ".userInfo", function () {
+        $(".userInfo").addClass("hover");
+    }).on("mouseleave", ".userInfo", function () {
+        $(".userInfo").removeClass("hover");
+    });
+}
+//内嵌页面修正宽高
+function fixIframeHeightWidth(obj) {
+    var self = $(obj),
+		d = self.contents(),
+		width = d.width(),
+		height = d.height(),
+		box = self.closest("[role=alertdialog]"),
+		title = box.find(".title-floatbox"),
+		loading = box.find("#beforeLoading"),
+		boxHeight = title.length > 0 ? height + title.outerHeight() : height;
+    loading.remove();
+    box.css({ "width": width, "height": (boxHeight + 1) + "px", "margin-left": "-" + (width / 2) + "px", "margin-top": "-" + boxHeight / 2 + "px" });
+    self.css({ "width": width + "px", "height": height + "px" });
+}
+
+//针对登录页面的设置宽高
+function fixIframeHeightWidthLogin(obj) {
+    var self = $(obj),
+		box = self.closest("[role=alertdialog]"),
+		title = box.find(".title-floatbox"),
+		loading = box.find("#beforeLoading");
+    loading.remove();
+    self.css({ "width": "555px", "height": "350px" });
+    // 循环检测cookie
+    setInterval(function () {
+        var a = NI.getCookie("NSESSIONID");
+        (null === a || "" === a ? !1 : !0) && location.reload();
+    }, 1000)
+}
+function closeFloatbox() {
+    $(".close-floatbox").click();
+}
+
+//站内短信发送
+function sendMessage() {
+    var self = $(this),
+		noMessageSort = self.attr("noMessageSort"),
+		attr = "",
+		appHost = getAppHost(),
+		userHost = appHost.user,
+		flag = self.attr("data-flag") ? self.attr("data-flag") : 0,
+		url = userHost + "/message/sendmessage?flag=" + flag;
+    if (noMessageSort === "true") {
+        var reciver = self.attr("data-reciver"),
+			title = self.attr("data-title");
+        if (!reciver) { reciver = ""; }
+        if (!title) { title = ""; }
+        attr = "noMessageSort='true' data-title='" + title + "' data-reciver='" + reciver + "'";
+    }
+    var str = "<div id='beforeLoading' class='absolute beforeLoading'></div>";
+    str += "<iframe " + attr + " id='sendMessageIframe' src='" + url + "' onload=\"fixIframeHeightWidth(this)\" frameborder='0' scrolling='no'></iframe>",
+    config = { box: "sendMessage", bg: "sendMessageBg", title: "站内短信发送", content: str, boxConfig: { width: "50px", height: "50px" } };
+    loadFloatboxScript(config);
+}
+
+function hideTip(obj) {
+    var target = typeof obj.attr == "function" ? obj : $(this),
+		tipbox = target.closest(".works-edit-item").find(".common-error-tip-box");
+    if (tipbox.css("display") !== "none") {
+        tipbox.hide().find(".common-error-tip").text("");
+    }
+}
+
+
+/*
+function checkIsExist(self,url,data,callback,sendBefore){
+	var errortip = self.closest("li").find(".field-validation-valid"),
+		tipbox = self.closest("li").find(".common-error-tip-box");
+	var sendBeforeFunc = callback && typeof callback === "function" && sendBefore && typeof sendBefore === "function" ? sendBefore : function(){};
+	$.ajax({
+		type: "POST",
+		url: url,
+		data: data,
+		dataType: "json",
+		beforeSend : sendBeforeFunc,
+		timeout: 10000,
+		success: function (r) {
+			var code = r.code,
+				mes = r.mes || r.message;
+			var err = tipbox.length > 0 ? tipbox : errortip;
+			if(callback && typeof callback === "function") {
+				callback(code,mes,err);
+				return;
+			}
+			if(code != 2000 && tipbox.length > 0){
+				var tip = tipbox.find(".common-error-tip");
+				tipbox.show();
+				tip.text(mes);
+				return;
+			}
+			if (code != 2000 && errortip.length > 0) {
+				errortip.html(mes).addClass("field-validation-error").show();
+				return;
+			} 
+			if (code != 2000 && errortip.length == 0) {
+				self.closest("li").append("<span data-valmsg-replace=\"true\" data-valmsg-for=\"UserName\" class=\"field-validation-error\">" + mes + "</span>");
+				return;
+			}
+		},
+		error : function(){
+			Widget.showErrorTip("请求出错或超时，请刷新后重试");
+		}
+	});
+}
+*/
+
+function changeVerifyCode() {
+    var self = $(this),
+		src = self.attr("src");
+    self.attr("src", src.split("?")[0] + "?v=" + Math.random());
+}
+
+function getAppHost() {
+    if ($("#domain").length > 0) {
+        return $.parseJSON($("#domain").val());
+    }
+    if ($("#domain", parent.document).length > 0) {
+        return $.parseJSON($("#domain", parent.document).val());
+    }
+    return null;
+}
+
+//页头搜索
+function headerSearch() {
+    var val = $(".J-search-txt").val(),
+		sosoUrl = getAppHost().so;
+    if ($.trim(val).length == 0) {
+        url = sosoUrl;
+    } else {
+        url = sosoUrl + "/?from=1&q=" + encodeURIComponent(val);
+    }
+    $("#J_headerSearch").attr("action", url).submit();
+}
+
+//邮箱网址大全
+var emailAddr = {
+    "@163.com": "http://email.163.com/",
+    "@126.com": "http://email.126.com/",
+    "@yeah.net": "http://email.yeah.net/",
+    "@qq.com": "http://mail.qq.com/",
+    "@gmail.com": "https://mail.google.com/",
+    "@yahoo.com": "http://mail.yahoo.com/",
+    "@sohu.com": "http://mail.sohu.com/",
+    "@189.cn": "http://mail.189.cn/",
+    "@sina.com": "http://mail.sina.com.cn/",
+    "@sina.cn": "http://mail.sina.com.cn/",
+    "@vip.sina.com": "http://mail.sina.com.cn/",
+    "@outlook.com": "https://login.live.com/",
+    "@hotmail.com": "https://login.live.com/",
+    "@live.com": "https://login.live.com/",
+    "@live.cn": "https://login.live.com/",
+    "@aliyun.com": "http://mail.aliyun.com/",
+    "@tom.com": "http://web.mail.tom.com/webmail/login/index.action",
+    "@sogou.com": "http://mail.sogou.com/",
+    "@2980.com": "http://www.2980.com/",
+    "@21cn.com": "http://mail.21cn.com/",
+    "@188.com": "http://www.188.com/",
+    "@foxmail.com": "http://www.foxmail.com/",
+    "@wo.com.cn": "http://mail.wo.com.cn/",
+    "@263.net": "http://www.263.net/",
+    "@263.net.cn": "http://www.263.net/",
+    "@263.com": "http://www.263.net/",
+    "@x263.net": "http://www.263.net/",
+    "@139.com": "http://mail.10086.cn/",
+    "@cntv.cn": "http://mail.cntv.cn/",
+    "@17173.com": "http://mail.17173.com/",
+    "@xinhuanet.com": "http://mail.xinhuanet.com/"
+}
+
+function ajaxCommonFun(url, data, successFun, errorFun, beforeSendFun, async) {
+    var bs = !!beforeSendFun && $.isFunction(beforeSendFun) ? beforeSendFun : function () { },
+		as = async != true ? false : true;
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: data,
+        async: as,
+        dataType: "json",
+        //timeout : 20000,
+        beforeSend: bs,
+        success: function (r) {
+            if (!!successFun && $.isFunction(successFun)) {
+                successFun(r);
+            } else {
+                $("#J_showWaiting").length > 0 && clearTimeout($.waitingTime) && $("#J_showWaiting").remove();
+                var code = r.code,
+					mes = r.mes;
+                if (code == 2000) {
+                    Widget.showSuccessTip(null, null, mes, { "isRefresh": true });
+                } else if (code == 4000) {
+                    loginAgain();
+                } else {
+                    Widget.showErrorTip(mes);
+                }
+            }
+            return;
+        },
+        error: function () {
+            if (!!errorFun && $.isFunction(errorFun)) {
+                errorFun();
+            } else {
+                $("#J_showWaiting").length > 0 && clearTimeout($.waitingTime) && $("#J_showWaiting").remove();
+                Widget.showErrorTip("系统繁忙，请稍后再试");
+            }
+            return;
+        }
+    });
+}
+
+//page:当前页码;totalPage:总页码;siblingsNum:左右2侧各显示几个
+function setFrontBackPageNum(page, totalPage, siblingsNum) {
+    if (totalPage - page < siblingsNum) {
+        var minus = page - siblingsNum - (siblingsNum - (totalPage - page));
+    } else {
+        var minus = page - siblingsNum;
+    }
+    if (page - siblingsNum < 1) {
+        var plus = page + siblingsNum + (siblingsNum - (page - 1));
+    } else {
+        var plus = page + siblingsNum;
+    }
+    var beginPos = minus >= 1 ? minus : 1,
+	    endPos = plus <= totalPage ? plus : totalPage,
+		frontList = [],
+		backList = [];
+    for (var i = beginPos; i < page; i++) {
+        frontList.push(i);
+    }
+    for (var i = page + 1; i <= endPos; i++) {
+        backList.push(i);
+    }
+    return {
+        frontList: frontList,
+        backList: backList
+    }
+}
+
+//异步获取js，并执行函数
+function loadFloatboxScript(config, callback) {
+    var box;
+    if (!!$.floatbox && typeof $.floatbox == "function") {
+        box = $.floatbox(config);
+        if (typeof callback == "function") {
+            callback();
+        }
+    } else {
+        // $.getScript不会缓存,重写方法
+        $.getScript = function (url, callback, cache) {
+            $.ajax({ type: 'GET', url: url, success: callback, dataType: 'script', ifModified: true, cache: cache });
+        }
+        $.getScript(getAppHost().login + "/original/js/plugin/jquery.nipic.floatbox.js", function () {
+            box = $.floatbox(config);
+            if (typeof callback == "function") {
+                callback();
+            }
+        },true);
+    }
+    return box;
+}
+
+//判断是否多账号登录
+var checkLoginMore = function () {
+    if ($("#Loginmore").val() != 1) {
+        return;
+    } else {
+        Widget.falseConfirm({
+            "titleMsg": "多人同时登录提醒",
+            "tipMsg": "当前账号有多人同时登录，如非本人操作，请重新修改登录密码",
+            "width": 567,
+            "btn": "<a title='确定' hidefocus='true' href='" + getAppHost().login + "/account/logout?backurl=" + location.href + "' class='inline-block bg-png24 search-sort-btn member-common-on'>确定</a>",
+            "closeBtnVisible": false
+        });
+    }
+}
+
+var setMinWidth = function (obj, minWidth) {
+    if (obj.length > 0) {
+        var width = obj.first().width(),
+			setWidth = width < minWidth ? parseInt(minWidth) + "px" : "auto";
+        obj.css("width", setWidth);
+    }
+}
+
+/*显示隐藏头部搜索条件*/
+/*var headerSearchSort = function(e){
+	var target = $(e.target),
+		headerRadio = $(".header-search-radio");
+	target.hasClass("header-search") || target.closest(".header-search").length > 0 ? headerRadio.show() : headerRadio.hide();
+}*/
+
+var showOrHideInputTip = function () {
+    var doMakeInputTip = function (self) {
+        var val = self.val(),
+            inputTip = self.siblings(".J_inputTip");
+        if (inputTip.length > 0) {
+            if (val.length === 0) {
+                inputTip.show();
+            } else {
+                inputTip.hide();
+            }
+        }
+    }
+
+    $(".J_inputTipRelation").each(function () {
+        doMakeInputTip($(this));
+    }).on({
+        "focus": function () {
+            var self = $(this),
+                inputTip = self.siblings(".J_inputTip");
+            if (inputTip.length > 0) {
+                inputTip.hide();
+            }
+        },
+        "blur": function () {
+            doMakeInputTip($(this));
+        }
+    });
+    $(".J_inputTip").on("click", function () {
+        $(this).hide().siblings(".J_inputTipRelation").focus();
+    });
+}
+//日历2017
+function shareClNoticePop(star, gxfen, ycfen) {
+    if (star >= 1 && gxfen >= 30000 || ycfen >= 2000) {
+        Widget.falseConfirm({
+            "type": 1,
+            "titleMsg": "活动提醒",
+            "width": 638,
+            "height": 560,
+            "tipMsg": "<div style='padding:0 46px;line-height:26px;'><img src='" + getAppHost().static + "/event/img/calendar2017.png' class='align-center' style='width:100%;'/><div style='text-align:left;'>尊敬的用户，您好：</div><div style='text-indent:2em;text-align:left;'>昵图网2017年台历预兑活动即将结束，如想使用共享分兑换本台历请抓紧时间，限账号等级≥1星级的会员可兑换，将消耗2万原创共享分或3万普通共享分。预计本月26日前邮寄完毕，产品为包邮！错过再等一年。</div></div>",
+            "btn": "<span class='inline-block bg-png24 close-floatbox search-sort-btn calendar2017-cancel'>取消</span><a href='" + getAppHost().user + "/pay/gxfenexchange' target='_blank'><span class='inline-block bg-png24 search-sort-btn member-common-on " + ((typeof config != 'undefined' && config.okClose) ? "" : "close-floatbox") + " J-confirm-yes'>现在去兑换</span>"
+        }, function (ok) {
+            NI.setCookie("calendar2017Notice", "yes", { expires: 90, domain: "nipic.com", path: "/" });
+        });
+    }
+}
+
+function bdShare(options) {
+    var opts = $.extend(true, {
+        bdText: "",
+        bdDesc: "",
+        bdUrl: "",
+        bdPic: "",
+        bdSize: 32,
+        container: ""
+    }, options);
+
+    var bdShareStr = "<div class=\"bdsharebuttonbox\" data-tag=\"share_1\">";
+    bdShareStr += "<a class=\"bds_qzone\" data-cmd=\"qzone\" href=\"#\"></a>";
+    bdShareStr += "<a class=\"bds_tsina\" data-cmd=\"tsina\"></a>";
+    bdShareStr += "<a class=\"bds_kaixin001\" data-cmd=\"kaixin001\"></a>";
+    bdShareStr += "<a class=\"bds_renren\" data-cmd=\"renren\"></a>";
+    bdShareStr += "<a class=\"bds_tqq\" data-cmd=\"tqq\"></a>";
+    bdShareStr += "<a class=\"bds_more\" data-cmd=\"more\">更多</a>";
+    bdShareStr += "<a class=\"bds_count\" data-cmd=\"count\"></a>";
+    bdShareStr += "</div>";
+    bdShareStr += "<script type=\"text/javascript\">";
+    bdShareStr += "window._bd_share_config = {";
+    bdShareStr += "common: {";
+    bdShareStr += "bdText:'" + opts.bdText + "',";
+    bdShareStr += "bdDesc:'" + opts.bdDesc + "',";
+    bdShareStr += "bdUrl:'" + opts.bdUrl + "',";
+    bdShareStr += "bdPic:'" + opts.bdPic + "'";
+    bdShareStr += "},";
+    bdShareStr += "share: [{";
+    bdShareStr += "tag: 'share_1',";
+    bdShareStr += "bdSize :" + opts.bdSize;
+    bdShareStr += "}]";
+    bdShareStr += "};";
+    bdShareStr += "with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion=' + ~(-new Date() / 36e5)];</scr";
+    bdShareStr += "ipt>";
+    var container = opts.container;
+    if (container instanceof jQuery) {
+        container.html(bdShareStr);
+    } else {
+        document.write(bdShareStr);
+    }
+}
+
+$(function () {
+    if ($("#_noapplypublic")[0]) return;
+    //Tool.makeInputTip($(".J_inputTipRelation"), $(".header-search-tip"), "输入关键字或作品编号搜图");
+    //$(document).on("click",function(e){ headerSearchSort(e); });
+    showOrHideInputTip();
+    var number = parseInt($("#parentLoc").val());
+    $(".newIndex-nav-item").eq(number).addClass("on");
+    //$("[name=sort]").val("");
+    $("#J_sort a").on("click", function () {
+        var self = $(this),
+		  	type = self.data("type");
+        self.addClass("on").siblings().removeClass("on");
+        $("[name=sort]").val(type);
+    });
+    if ($("#sosoGuide").length > 0) {
+        sosoGuide();
+    }
+    feedBackBox();
+    if ($(".newIndex-login").length > 0) {
+        loadUserInfoV2();
+    } else {
+        loadUserInfo();
+    }
+    $(".pic-bone-box").hover(function () { $(this).addClass('pic-bone-box-hover'); }, function () { $(this).removeClass('pic-bone-box-hover'); });
+    $(".J-show-box").hover(function () { $(this).addClass("member-nav-item-hover"); }, function () { $(this).removeClass("member-nav-item-hover"); });
+    Tool.makeInputTip($(".J-search-txt"), $(".J-fast-search-tip"), "搜图片");
+    //$(".J-search-btn").on("click",headerSearch);
+    //$(".J-search-txt").on("keydown",function(e){
+    //if(e.keyCode == 13) headerSearch();
+    //});
+    if ($("#Loginmore").length > 0) {
+        checkLoginMore();
+    }
+    if ($.browser.msie && $.browser.version == "6.0") {
+        /*$.getScript(getAppHost().static + "/js/iepng.js",function(){
+			EvPNG.fix(".png24,.ico,.bg-png24");
+		});*/
+
+        //设置页码的宽度
+        setMinWidth($(".page-num em"), 24);
+        setMinWidth($(".page-num-on em"), 24);
+    }
+});
+
+if ($(".lazy").length > 0) {
+    $(".lazy").lazyload({ effect: "fadeIn" });
+}

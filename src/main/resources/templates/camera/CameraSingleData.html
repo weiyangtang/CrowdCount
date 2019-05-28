@@ -1,0 +1,184 @@
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <!--include ECharts document-->
+    <title>
+        ECharts
+    </title>
+    <script th:src="@{~/static/bootstrap/js/jquery-3.4.1.min.js}"></script>
+    <link th:href="@{~/static/bootstrap/css/bootstrap.css}" rel="stylesheet"/>
+    <script th:src="@{~/static/bootstrap/js/bootstrap.js}"></script>
+    <link th:href="@{~/static/bootstrap/css/bootstrap.css}" rel="stylesheet"/>
+    <link th:href="@{~/static/layui/css/layui.css}" rel="stylesheet"/>
+    <!--<script th:src="@{~/static/layui/layui.all.js}"></script>-->
+    <script th:src="@{~/static/layer/layer.js}"></script>
+
+    <!--echarts插件-->
+    <script th:src="@{~/static/echarts/echarts.min.js}"></script>
+    <script th:src="@{~/static/echarts/esl.js}"></script>
+</head>
+<body>
+<div id="main" style="width:90%;height: 350px"></div>
+<input id="camera_id" th:value="${camera.camera_id}" STYLE="display: none"/>
+<!--<p><strong class="easyui-tooltip" title="2条未读消息" th:text="${camera.camera_id}" STYLE="display: none"></strong></p>-->
+<script type="text/javascript">
+
+    var myChart = echarts.init(document.getElementById('main'));
+
+    function showdata() {
+        camera_id = $("#camera_id").val();
+        // camera_id = $("#camera option:selected").text();
+        // camera_id_int = parseInt(camera_id)
+        // alert(typeof (camera_id_int))
+        $.ajax({
+            type: 'post',
+            url: '/CameraPeople/CameraRealTime',
+            async: false,
+            data: {
+                'camera_id': camera_id,
+                'top_num': 10
+            },
+            success: function (data) {
+                // alert(data)
+                xdata = []
+                ydata = []
+                peopleData = []
+                temp = []
+                for (var i = 0; i < data.length; i++) {
+                    temp.push(data[i].time)
+                    temp.push(data[i].num)
+                    peopleData.push(temp)
+                    temp = []
+                }
+                console.log(xdata.toString())
+                console.log(ydata.toString())
+                myChart.setOption({
+                    title: {
+                        text: '人群监控情况',
+                        subtext: '数据来自' + data[0].camera_place + '的' + data[0].camera_id + '号摄像头',
+                        x: 'center',
+                        align: 'right'
+                    },
+                    xAxis: {
+                        name: '时间',
+                        type: 'category',
+                        boundaryGap: false,
+                        axisLine: {onZero: false},
+
+
+                        axisLabel: {
+                            interval: 0,
+                            formatter: function (value) {
+                                var ret = '';
+                                var maxLength = 10;
+                                var rowNum = Math.ceil(value.length / maxLength);
+                                if (rowNum > 1) {
+                                    for (var i = 0; i < rowNum; i++) {
+                                        var temp = "";
+                                        var start = i * maxLength;
+                                        var end = start + maxLength;
+                                        temp = value.substring(start, end) + "\n";
+                                        ret += temp;
+                                    }
+                                    return ret;
+                                } else {
+                                    return value;
+                                }
+                            }
+                        }
+
+
+                    },
+                    grid: {
+                        //   left: '10%',
+                        // top:'100',
+                        bottom: '80'
+                    },
+                    yAxis: {
+                        name: '人流量(人数)',
+                        type: "value"
+                    },
+                    series: [{
+                        name: '人流量',
+                        type: 'line',
+                        smooth: true,
+                        symbol: 'none',
+                        stack: 'a',
+                        areaStyle: {
+                            normal: {}
+                        },
+
+                        data: peopleData
+                    }],
+                    visualMap: {
+                        top: 10,
+                        right: 10,
+                        pieces: [{
+                            gt: 0,
+                            lte: 5,
+                            color: '#096'
+                        }, {
+                            gt: 5,
+                            lte: 10,
+                            color: '#ffde33'
+                        }, {
+                            gt: 10,
+                            lte: 15,
+                            color: '#ff9933'
+                        }, {
+                            gt: 15,
+                            lte: 20,
+                            color: '#cc0033'
+                        }, {
+                            gt: 20,
+                            lte: 30,
+                            color: '#660099'
+                        }, {
+                            gt: 30,
+                            color: '#7e0023'
+                        }],
+                        outOfRange: {
+                            color: '#999'
+                        }
+                    },
+                    toolbox: {
+                        left: 'right',
+                        orient: 'vertical',
+                        right: 50,
+                        top: 40,
+                        feature: {
+                            dataZoom: {
+                                yAxisIndex: 'none'
+                            },
+                            restore: {},
+                            saveAsImage: {}
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            animation: false,
+                            label: {
+                                backgroundColor: '#505765'
+                            }
+                        },
+                    },
+                    dataZoom: [{
+                        startValue: '2014-06-01'
+                    }, {
+                        type: 'inside'
+                    }],
+                });
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+
+    setInterval("showdata()", 100) //每隔0.1s更新一次
+
+</script>
+</body>
+</html>
