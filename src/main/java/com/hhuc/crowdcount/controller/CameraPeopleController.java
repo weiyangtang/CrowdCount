@@ -20,7 +20,7 @@ public class CameraPeopleController {
 
     @RequestMapping(value = "/CameraPeople/CameraRealTime", method = RequestMethod.GET)
     public String CameraPeopleAllListPage() {
-        return "/camera/CameraRealTimePage";
+        return "camera/CameraRealTimePage";
     }
 
     @RequestMapping(value = "/CameraPeople/CameraRealTime", method = RequestMethod.POST)
@@ -31,7 +31,7 @@ public class CameraPeopleController {
 
     @RequestMapping(value = "/CameraPeople/CameraPhoto", method = RequestMethod.GET)
     public String CameraPhotoPage() {
-        return "/camera/CameraPhoto";
+        return "camera/CameraPhoto";
     }
 
     @RequestMapping(value = "/CameraPeople/CameraPhoto", method = RequestMethod.POST)
@@ -45,7 +45,7 @@ public class CameraPeopleController {
      */
     @RequestMapping(value = "/CameraPeople/CameraPeopleData", method = RequestMethod.GET)
     public String CameraPeopleDataPage() {
-        return "/camera/CameraPeopleData";
+        return "camera/CameraPeopleData";
     }
 
     /**
@@ -56,12 +56,12 @@ public class CameraPeopleController {
         Camera camera = new Camera();
         camera.setCamera_id(Camera_id);
         model.addAttribute("camera", camera);
-        return "/camera/CameraSingleData";
+        return "camera/CameraSingleData";
     }
 
     @RequestMapping(value = "/CameraPeople/CameraPhotoAll", method = RequestMethod.GET)
     public String CameraPhotoAllPage() {
-        return "/camera/CameraPhotoAll";
+        return "camera/CameraPhotoAll";
     }
 
 }

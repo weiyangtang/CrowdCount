@@ -11,6 +11,7 @@
     <groupId>com.hhuc</groupId>
     <artifactId>crowdcount</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>crowdcount</name>
     <description>zhongruanbei</description>
 
@@ -107,6 +108,7 @@
         </dependency>
     </dependencies>
 
+    <!-- 普通的maven打包方式 -->
     <build>
         <plugins>
             <plugin>
@@ -115,5 +117,6 @@
             </plugin>
         </plugins>
     </build>
+    <!-- 普通的maven打包方式 -->
 
 </project>

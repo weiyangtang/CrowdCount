@@ -21,7 +21,7 @@
         position: absolute;
         width: 100%;
         background: #fff;
-        height: 280px;
+        height: 300px;
         top: 25%;
         padding-top: 40px;
         padding-left: 100px;
@@ -78,8 +78,13 @@
                 </div>
             </div>
             <br>
-            <div class="submit">
-                <button onclick="login()" class="btn btn-primary btn-lg btn-block">登录</button>
+            <div class="row">
+                <div class="form-inline" style="width: 80%; padding-left: 8%;">
+                    <button onclick="login()" class="btn btn-info btn-lg btn-block col-sm-3">登录
+                    </button>
+                    <button onclick="register()" class="btn btn-info btn-lg btn-block col-sm-3">注册
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -87,6 +92,11 @@
 </body>
 
 <script type="text/javascript">
+
+    function register() {
+        window.location.href = "/register";
+    }
+
     function login() {
         console.log('start')
         var account = $("#account").val();

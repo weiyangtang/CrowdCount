@@ -18,7 +18,7 @@ public class CameraController {
 
     @RequestMapping(value = "/camera/allList", method = RequestMethod.GET)
     public String getAllCameraInfoPage() {
-        return "/camera/CameraList";
+        return "camera/CameraList";
     }
 
     @RequestMapping(value = "/camera/allList", method = RequestMethod.POST)
@@ -32,7 +32,7 @@ public class CameraController {
      */
     @RequestMapping(value = "/camera/cameraLocation", method = RequestMethod.GET)
     public String CameraLocationPage() {
-        return "/camera/cameraLocation";
+        return "camera/cameraLocation";
     }
 
 
